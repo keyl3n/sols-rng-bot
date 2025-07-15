@@ -37,12 +37,16 @@ if (fs.existsSync(aurasPath)) {
 }
 const dreamspaceAuras = JSON.parse(fs.readFileSync('./dreamspaceAuras.json'));
 const glitchedAuras = JSON.parse(fs.readFileSync('./glitchedAuras.json'));
+const pumpkinMoonAuras = JSON.parse(fs.readFileSync('./pumpkinMoonAuras.json'));
+const graveyardAuras = JSON.parse(fs.readFileSync('./graveyardAuras.json'));
 
 const combinedAuras = [
   ...auras,
   ...Object.values(biomeAuras).flat(),
   ...dreamspaceAuras,
-  ...glitchedAuras
+  ...glitchedAuras,
+  ...pumpkinMoonAuras,
+  ...graveyardAuras
 ];
 
 let auraDescriptions = {};
@@ -65,6 +69,8 @@ const biomeThumbnails = {
   "Starfall": "https://keylens-website.web.app/biomes/STARFALL.png",
   "Corruption": "https://keylens-website.web.app/biomes/CORRUPTION.png",
   "Null": "https://keylens-website.web.app/biomes/NULL.png",
+  "Pumpkin Moon": "https://keylens-website.web.app/biomes/PUMPKIN%20MOON.png",
+  "Graveyard": "https://keylens-website.web.app/biomes/GRAVEYARD.png",
   "Glitched": "https://keylens-website.web.app/biomes/GLITCHED.png",
   "Dreamspace": "https://keylens-website.web.app/biomes/DREAMSPACE.png"
 };
@@ -357,7 +363,7 @@ function getUserAuraSummary(userId) {
   }
 
   const auraWeights = Object.fromEntries(
-    [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras].map(a => [a.name, a.chanceIn])
+    [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => [a.name, a.chanceIn])
   );
 
   const sorted = Object.entries(userAuras)
@@ -627,6 +633,22 @@ async function roll(interaction, isButton = false, couldntDisable) {
           };
         }),
       ...glitchedAuras.map(a => ({
+        name: a.name,
+        weight: 1 / a.chanceIn
+      }))
+    ];
+  } else if (currentBiome.name === 'Pumpkin Moon') {
+    auraPool = [
+      ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+      ...pumpkinMoonAuras.map(a => ({
+        name: a.name,
+        weight: 1 / a.chanceIn
+      }))
+    ];
+  } else if (currentBiome.name === 'Graveyard') {
+    auraPool = [
+      ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+      ...graveyardAuras.map(a => ({
         name: a.name,
         weight: 1 / a.chanceIn
       }))
@@ -1058,7 +1080,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     const auraWeights = Object.fromEntries(
-      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras].map(a => [a.name, a.chanceIn])
+      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => [a.name, a.chanceIn])
     );
 
     const sortedAuras = Object.entries(userAuras)
@@ -1223,7 +1245,7 @@ client.on('interactionCreate', async interaction => {
         });
       }
 
-      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras];
+      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras];
       const the_aura = allAuras.find(a => a.name.toLowerCase() === name.toLowerCase());
 
       if (!the_aura) {
@@ -1340,6 +1362,22 @@ client.on('interactionCreate', async interaction => {
             weight: 1 / a.chanceIn
           }))
         ];
+      } else if (currentBiome.name === 'Pumpkin Moon') {
+        auraPool = [
+          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+          ...pumpkinMoonAuras.map(a => ({
+            name: a.name,
+            weight: 1 / a.chanceIn
+          }))
+        ];
+      } else if (currentBiome.name === 'Graveyard') {
+        auraPool = [
+          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+          ...graveyardAuras.map(a => ({
+            name: a.name,
+            weight: 1 / a.chanceIn
+          }))
+        ];
       } else if (currentBiome.name === 'Glitched') {
         auraPool = [
           ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -1451,7 +1489,7 @@ client.on('interactionCreate', async interaction => {
 
       if (!userData[userId]) userData[userId] = {};
 
-      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras];
+      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras];
       let added = 0;
 
       for (const aura of allAuras) {
@@ -1595,6 +1633,22 @@ client.on('interactionCreate', async interaction => {
         auraPool = [
           ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
           ...dreamspaceAuras.map(a => ({
+            name: a.name,
+            weight: 1 / a.chanceIn
+          }))
+        ];
+      } else if (currentBiome.name === 'Pumpkin Moon') {
+        auraPool = [
+          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+          ...pumpkinMoonAuras.map(a => ({
+            name: a.name,
+            weight: 1 / a.chanceIn
+          }))
+        ];
+      } else if (currentBiome.name === 'Graveyard') {
+        auraPool = [
+          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+          ...graveyardAuras.map(a => ({
             name: a.name,
             weight: 1 / a.chanceIn
           }))
@@ -1840,7 +1894,7 @@ client.on('interactionCreate', async interaction => {
     }
     const auraCount = userAuras[ownedAura];
 
-    const aura = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras].find(a => a.name.toLowerCase() === ownedAura.toLowerCase());
+    const aura = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].find(a => a.name.toLowerCase() === ownedAura.toLowerCase());
     if (!aura) {
       return interaction.reply({
         content: '<:no:1390740593306632394> That aura does not exist.',
@@ -1884,6 +1938,12 @@ client.on('interactionCreate', async interaction => {
     if (dreamspaceAuras.some(a => a.name === aura.name)) {
       conditionLabel = "Required Conditions";
       conditionValue = "During Dreamspace";
+    } else if (pumpkinMoonAuras.some(a => a.name === aura.name)) {
+      conditionLabel = "Required Conditions";
+      conditionValue = "During Pumpkin Moon";
+    } else if (graveyardAuras.some(a => a.name === aura.name)) {
+      conditionLabel = "Required Conditions";
+      conditionValue = "During Graveyard";
     } else if (glitchedAuras.some(a => a.name === aura.name)) {
       conditionLabel = "Required Conditions";
       conditionValue = "During Glitched";
@@ -2012,7 +2072,7 @@ client.on('interactionCreate', async interaction => {
 
     // DEV > FORCEROLL > AURA NAMES
     if (command === 'dev' && sub === 'forceroll') {
-      const choices = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras].map(a => a.name);
+      const choices = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => a.name);
       const filtered = choices.filter(choice =>
         choice.toLowerCase().includes(focused.toLowerCase())
       ).slice(0, 25);
@@ -2047,7 +2107,7 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === 'aurainfo') {
       const focused = interaction.options.getFocused();
       const userAuras = userData[interaction.user.id] || {};
-      const allAuraNames = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras].map(a => a.name);
+      const allAuraNames = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => a.name);
       const filtered = allAuraNames
         .filter(name => name.toLowerCase().includes(focused.toLowerCase()))
         .slice(0, 25);
@@ -2156,7 +2216,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
     const userAuras = userData[userId];
     const auraWeights = Object.fromEntries(
-      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras].map(a => [a.name, a.chanceIn])
+      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => [a.name, a.chanceIn])
     );
     const sortedAuras = Object.entries(userAuras)
       .sort((a, b) => (auraWeights[b[0]] || 0) - (auraWeights[a[0]] || 0));
