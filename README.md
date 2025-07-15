@@ -4,5 +4,5 @@ There are some things I want to note about this bot:
 1. Right now, there is an issue where the /dev createaura and /dev deleteaura commands do not apply until the bot is restarted. I will fix this eventually
 2. This bot uses application emojis that I'm not sure will work if you're using a different clientId. If they don't show up properly, replace them yourself or just use the normal ✅, ⚠️, and ❌ emojis if you'd like.
 
-made by .keylen (686748689988976721) on Discord
+made by .keylen (686748689988976721) on Discord  
 @Techno_Paper on Roblox
