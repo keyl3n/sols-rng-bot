@@ -1,7 +1,14 @@
-(all updates below this line were made before the creation of this file, meaning the only available update logs are ones made public on discord. internal changes will not be available)
+## Sol's RNG Bot v3.4.2
+Just reorganized and renamed some stuff in config.json
+ALSO
+### New Config Option
+- `identifyConsoleLoggedRolls`: When enabled, rolls logged in the console will show some basic information about who rolled the aura next to the roll result.
+
 ## Sol's RNG Bot v3.4.1
 ### Removed-ish a Command
 - Stopped `/gurt` from registering as a command for now (it was just a joke command anyway)
+
+(all updates below this line were made before the creation of this file, meaning the only available update logs are ones made public on discord. internal changes will not be available)
 
 # Sol's RNG Bot v3.4.0
 ### New obtainable items
