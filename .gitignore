@@ -1,0 +1,10 @@
+node_modules/
+backups/
+.vs/
+oldAurasCollection.txt
+auras.json.old
+lbBlacklist.json
+rollcounts.json
+userdata.json
+useritems.json
+biomelogs.json

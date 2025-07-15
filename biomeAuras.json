@@ -1,0 +1,296 @@
+[
+  {
+    "name": "Wind",
+    "chanceIn": 900,
+    "biomeRarity": {
+      "Windy": 300
+    }
+  },
+  {
+    "name": "Stormal",
+    "chanceIn": 90000,
+    "biomeRarity": {
+      "Windy": 30000
+    }
+  },
+  {
+    "name": "Stormal : Hurricane",
+    "chanceIn": 13500000,
+    "biomeRarity": {
+      "Windy": 4500000
+    }
+  },
+  {
+    "name": "AVIATOR",
+    "chanceIn": 24000000,
+    "biomeRarity": {
+      "Windy": 8000000
+    }
+  },
+  {
+    "name": "Glacier",
+    "chanceIn": 2304,
+    "biomeRarity": {
+      "Snowy": 768
+    }
+  },
+  {
+    "name": "Permafrost",
+    "chanceIn": 73500,
+    "biomeRarity": {
+      "Snowy": 24500
+    }
+  },
+  {
+    "name": "Blizzard",
+    "chanceIn": 27315000,
+    "biomeRarity": {
+      "Snowy": 9105000
+    }
+  },
+  {
+    "name": "Poseidon",
+    "chanceIn": 4000000,
+    "biomeRarity": {
+      "Rainy": 1000000
+    }
+  },
+  {
+    "name": "Sailor",
+    "chanceIn": 12000000,
+    "biomeRarity": {
+      "Rainy": 3000000
+    }
+  },
+  {
+    "name": "Sailor : Flying Dutchman",
+    "chanceIn": 80000000,
+    "biomeRarity": {
+      "Rainy": 20000000
+    }
+  },
+  {
+    "name": "Abyssal Hunter",
+    "chanceIn": 400000000,
+    "biomeRarity": {
+      "Rainy": 100000000
+    }
+  },
+  {
+    "name": "Gilded",
+    "chanceIn": 512,
+    "biomeRarity": {
+      "Sand Storm": 128
+    }
+  },
+  {
+    "name": "Jackpot",
+    "chanceIn": 777,
+    "biomeRarity": {
+      "Sand Storm": 194
+    }
+  },
+  {
+    "name": "Anubis",
+    "chanceIn": 7200000,
+    "biomeRarity": {
+      "Sand Storm": 1800000
+    }
+  },
+  {
+    "name": "Atlas",
+    "chanceIn": 360000000,
+    "biomeRarity": {
+      "Sand Storm": 90000000
+    }
+  },
+  {
+    "name": "Undead",
+    "chanceIn": 12000,
+    "biomeRarity": {
+      "Hell": 2000
+    }
+  },
+  {
+    "name": "Undead : Devil",
+    "chanceIn": 120000,
+    "biomeRarity": {
+      "Hell": 20000
+    }
+  },
+  {
+    "name": "Hades",
+    "chanceIn": 6666666,
+    "biomeRarity": {
+      "Hell": 1111111
+    }
+  },
+  {
+    "name": "BLOODLUST",
+    "chanceIn": 300000000,
+    "biomeRarity": {
+      "Hell": 50000000
+    }
+  },
+  {
+    "name": "Starlight",
+    "chanceIn": 50000,
+    "biomeRarity": {
+      "Starfall": 10000
+    }
+  },
+  {
+    "name": "Star Rider",
+    "chanceIn": 50000,
+    "biomeRarity": {
+      "Starfall": 10000
+    }
+  },
+  {
+    "name": "Comet",
+    "chanceIn": 1200000,
+    "biomeRarity": {
+      "Starfall": 24000
+    }
+  },
+  {
+    "name": "Astral",
+    "chanceIn": 1336200,
+    "biomeRarity": {
+      "Starfall": 267000
+    }
+  },
+  {
+    "name": "Galaxy",
+    "chanceIn": 5000000,
+    "biomeRarity": {
+      "Starfall": 1000000
+    }
+  },
+  {
+    "name": "Stargazer",
+    "chanceIn": 9200000,
+    "biomeRarity": {
+      "Starfall": 1840000
+    }
+  },
+  {
+    "name": "Starscourge",
+    "chanceIn": 10000000,
+    "biomeRarity": {
+      "Starfall": 2000000
+    }
+  },
+  {
+    "name": "Sirius",
+    "chanceIn": 14000000,
+    "biomeRarity": {
+      "Starfall": 2800000
+    }
+  },
+  {
+    "name": "Starscourge : Radiant",
+    "chanceIn": 100000000,
+    "biomeRarity": {
+      "Starfall": 20000000
+    }
+  },
+  {
+    "name": "Astral : Legendarium",
+    "chanceIn": 267200000,
+    "biomeRarity": {
+      "Starfall": 53400000
+    }
+  },
+  {
+    "name": "GARGANTUA",
+    "chanceIn": 430000000,
+    "biomeRarity": {
+      "Starfall": 86000000
+    }
+  },
+  {
+    "name": "Hazard",
+    "chanceIn": 7000,
+    "biomeRarity": {
+      "Corruption": 1400
+    }
+  },
+  {
+    "name": "Corrosive",
+    "chanceIn": 12000,
+    "biomeRarity": {
+      "Corruption": 2400
+    }
+  },
+  {
+    "name": "Hazard : Rays",
+    "chanceIn": 70000,
+    "biomeRarity": {
+      "Corruption": 14000
+    }
+  },
+  {
+    "name": "Impeached",
+    "chanceIn": 200000000,
+    "biomeRarity": {
+      "Corruption": 40000000
+    }
+  },
+  {
+    "name": "Undefined",
+    "chanceIn": 1111111,
+    "biomeRarity": {
+      "Null": 1111
+    }
+  },
+  {
+    "name": "Nihility",
+    "chanceIn": 9000000,
+    "biomeRarity": {
+      "Null": 9000
+    }
+  },
+  {
+    "name": "Solar",
+    "chanceIn": 50000,
+    "biomeRarity": {
+      "Daytime": 5000
+    }
+  },
+  {
+    "name": "Solar : Solstice",
+    "chanceIn": 5000000,
+    "biomeRarity": {
+      "Daytime": 500000
+    }
+  },
+  {
+    "name": "Lunar",
+    "chanceIn": 50000,
+    "biomeRarity": {
+      "Nighttime": 5000
+    }
+  },
+  {
+    "name": "Lunar : Full Moon",
+    "chanceIn": 5000000,
+    "biomeRarity": {
+      "Nighttime": 500000
+    }
+  },
+  {
+    "name": "Twilight",
+    "chanceIn": 6000000,
+    "biomeRarity": {
+      "Nighttime": 600000
+    }
+  },
+  {
+    "name": "Twilight : Iridescent Memory",
+    "chanceIn": 60000000,
+    "biomeRarity": {
+      "Nighttime": 6000000
+    }
+  }
+]

@@ -1,0 +1,334 @@
+[
+  {
+    "name": "Common",
+    "chanceIn": 2
+  },
+  {
+    "name": "Uncommon",
+    "chanceIn": 4
+  },
+  {
+    "name": "Good",
+    "chanceIn": 5
+  },
+  {
+    "name": "Natural",
+    "chanceIn": 8
+  },
+  {
+    "name": "Rare",
+    "chanceIn": 16
+  },
+  {
+    "name": "Divinus",
+    "chanceIn": 32
+  },
+  {
+    "name": "Crystallized",
+    "chanceIn": 64
+  },
+  {
+    "name": "Rage",
+    "chanceIn": 128
+  },
+  {
+    "name": "Rage : Heated",
+    "chanceIn": 12800
+  },
+  {
+    "name": "Forbidden",
+    "chanceIn": 403
+  },
+  {
+    "name": "Ink",
+    "chanceIn": 700
+  },
+  {
+    "name": "Ink : LEAK",
+    "chanceIn": 14000
+  },
+  {
+    "name": "Diaboli",
+    "chanceIn": 1004
+  },
+  {
+    "name": "Diaboli : Void",
+    "chanceIn": 100400
+  },
+  {
+    "name": "Precious",
+    "chanceIn": 1024
+  },
+  {
+    "name": "Glock",
+    "chanceIn": 1700
+  },
+  {
+    "name": "Magnetic",
+    "chanceIn": 2048
+  },
+  {
+    "name": "Ash",
+    "chanceIn": 2300
+  },
+  {
+    "name": "Player",
+    "chanceIn": 3000
+  },
+  {
+    "name": "Sidereum",
+    "chanceIn": 4096
+  },
+  {
+    "name": "Bleeding",
+    "chanceIn": 4444
+  },
+  {
+    "name": "Flushed",
+    "chanceIn": 6900
+  },
+  {
+    "name": "Flushed : Lobotomy",
+    "chanceIn": 69000
+  },
+  {
+    "name": "Quartz",
+    "chanceIn": 8192
+  },
+  {
+    "name": "Lost Soul",
+    "chanceIn": 9200
+  },
+  {
+    "name": "Powered",
+    "chanceIn": 16384
+  },
+  {
+    "name": "Aquatic",
+    "chanceIn": 40000
+  },
+  {
+    "name": "Lunar",
+    "chanceIn": 50000
+  },
+  {
+    "name": "Lunar : Full Moon",
+    "chanceIn": 500000
+  },
+  {
+    "name": "Solar",
+    "chanceIn": 50000
+  },
+  {
+    "name": "Solar : Solstice",
+    "chanceIn": 500000
+  },
+  {
+    "name": "Nautilus",
+    "chanceIn": 70000
+  },
+  {
+    "name": "Exotic",
+    "chanceIn": 99999
+  },
+  {
+    "name": "Jade",
+    "chanceIn": 125000
+  },
+  {
+    "name": "Spectre",
+    "chanceIn": 140000
+  },
+  {
+    "name": "Jazz",
+    "chanceIn": 160000
+  },
+  {
+    "name": "Aether",
+    "chanceIn": 180000
+  },
+  {
+    "name": "BOUNDED",
+    "chanceIn": 200000
+  },
+  {
+    "name": "Celestial",
+    "chanceIn": 350000
+  },
+  {
+    "name": "Kyawthuite",
+    "chanceIn": 850000
+  },
+  {
+    "name": "Arcane",
+    "chanceIn": 1000000
+  },
+  {
+    "name": "Magnetic : Reverse Polarity",
+    "chanceIn": 1024000
+  },
+  {
+    "name": "Rage : Brawler",
+    "chanceIn": 1280000
+  },
+  {
+    "name": "Cosmos",
+    "chanceIn": 1520000
+  },
+  {
+    "name": "Gravitational",
+    "chanceIn": 2000000
+  },
+  {
+    "name": "BOUNDED : UNBOUND",
+    "chanceIn": 2000000
+  },
+  {
+    "name": "Virtual",
+    "chanceIn": 2500000
+  },
+  {
+    "name": "Savior",
+    "chanceIn": 3200000
+  },
+  {
+    "name": "Aquatic : Flame",
+    "chanceIn": 4000000
+  },
+  {
+    "name": "Zeus",
+    "chanceIn": 4500000
+  },
+  {
+    "name": "Origin",
+    "chanceIn": 6500000
+  },
+  {
+    "name": "Celestial : Divine",
+    "chanceIn": 7000000
+  },
+  {
+    "name": "HYPER-VOLT",
+    "chanceIn": 7500000
+  },
+  {
+    "name": "VELOCITY",
+    "chanceIn": 7630000
+  },
+  {
+    "name": "HARNESSED",
+    "chanceIn": 8500000
+  },
+  {
+    "name": "Helios",
+    "chanceIn": 9000000
+  },
+  {
+    "name": "EXOTIC : APEX",
+    "chanceIn": 49999500
+  },
+  {
+    "name": "Luminosity",
+    "chanceIn": 1200000000
+  },
+  {
+    "name": "Arcane : Legacy",
+    "chanceIn": 15000000
+  },
+  {
+    "name": "Chromatic",
+    "chanceIn": 20000000
+  },
+  {
+    "name": "Arcane : Dark",
+    "chanceIn": 30000000
+  },
+  {
+    "name": "Ethereal",
+    "chanceIn": 35000000
+  },
+  {
+    "name": "Virtual : Fatal Error",
+    "chanceIn": 40413000
+  },
+  {
+    "name": "Overseer",
+    "chanceIn": 45000000
+  },
+  {
+    "name": "Matrix",
+    "chanceIn": 50000000
+  },
+  {
+    "name": "Runic",
+    "chanceIn": 50000000
+  },
+  {
+    "name": "SENTINEL",
+    "chanceIn": 60000000
+  },
+  {
+    "name": "Carriage",
+    "chanceIn": 80000000
+  },
+  {
+    "name": "Chromatic : Genesis",
+    "chanceIn": 99999999
+  },
+  {
+    "name": "Overture",
+    "chanceIn": 150000000
+  },
+  {
+    "name": "Symphony",
+    "chanceIn": 175000000
+  },
+  {
+    "name": "Archangel",
+    "chanceIn": 250000000
+  },
+  {
+    "name": "Overture : History",
+    "chanceIn": 300000000
+  },
+  {
+    "name": "Jazz : Orchestra",
+    "chanceIn": 336870912
+  },
+  {
+    "name": "APOSTOLOS",
+    "chanceIn": 444000000
+  },
+  {
+    "name": "Kyawthuite : Remembrance",
+    "chanceIn": 450000000
+  },
+  {
+    "name": "Ruins",
+    "chanceIn": 500000000
+  },
+  {
+    "name": "Matrix : Overdrive",
+    "chanceIn": 503000000
+  },
+  {
+    "name": "Matrix : Reality",
+    "chanceIn": 601020102
+  },
+  {
+    "name": "Sovereign",
+    "chanceIn": 750000000
+  },
+  {
+    "name": "Ruins : Withered",
+    "chanceIn": 800000000
+  },
+  {
+    "name": "Aegis",
+    "chanceIn": 825000000
+  },
+  {
+    "name": "Pixelation",
+    "chanceIn": 1073741824
+  }
+]

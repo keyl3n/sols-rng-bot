@@ -1,0 +1,5 @@
+[
+    { "name": "★", "chanceIn": 100 },
+    { "name": "★★", "chanceIn": 1000 },
+    { "name": "★★★", "chanceIn": 10000 }
+  ]  
