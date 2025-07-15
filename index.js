@@ -679,9 +679,18 @@ async function roll(interaction, isButton = false, couldntDisable) {
   const chanceIn = Math.round(100 / percentage);
   const isEphemeral = chanceIn < 998;
 
+  let identificationObject;
+
+  if (config.identifyConsoleLoggedRolls) {
+    identificationObject = {
+      username: interaction.user.username,
+      id: interaction.user.id
+    }
+  }
+
   if (couldntDisable != null) {
-    console.log(chalk.bgBlue.white('ROLL'), the_aura, couldntDisable ? '[⚠️]' : '')
-  } else { console.log(chalk.bgBlue.white('ROLL'), the_aura) }
+    console.log(chalk.bgBlue.white('ROLL'), the_aura, couldntDisable ? '[⚠️]' : '', identificationObject ? identificationObject : '')
+  } else { console.log(chalk.bgBlue.white('ROLL'), the_aura, identificationObject ? identificationObject : '') }
 
   let color;
   if (chanceIn >= 1_000_000_000) {
@@ -753,9 +762,9 @@ async function roll(interaction, isButton = false, couldntDisable) {
     console.error(chalk.redBright(`${chalk.bgRedBright.white('ERROR')} Failed to respond to interaction:`), err);
   }
 
-  if (config.logHookUrl) {
+  if (config.rollLogWebhookUrl) {
     request.post(
-      config.logHookUrl,
+      config.rollLogWebhookUrl,
       {
         json: {
           content: `You rolled: **${the_aura.name}**! [ 1 in ${chanceIn} or ${percentage}% chance ] (<@${interaction.user.id}>)`,
@@ -765,7 +774,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
       },
       function (error, response, body) {
         if (error || response.statusCode !== 204) {
-          console.error(`${chalk.bgRedBright.white('ERROR')} ${chalk.red(` Failed to send to logHookUrl:`)}`, response?.statusCode, error?.message || body);
+          console.error(`${chalk.bgRedBright.white('ERROR')} ${chalk.red(` Failed to send to rollLogWebhookUrl:`)}`, response?.statusCode, error?.message || body);
         }
       }
     );
@@ -790,13 +799,13 @@ function getRandomAura(auras) {
 
 client.on('ready', async () => {
   console.log(`${chalk.bgGreenBright.black('OK')} Logged in as ${client.user.tag}!`);
-  console.log(`${chalk.bgGreenBright.black('OK')} Valid items loaded:`,validItems);
+  console.log(`${chalk.bgGreenBright.black('OK')} Valid items loaded:`, validItems);
   console.log(`${chalk.bgBlue.white('!')} Preparing to deploy the following commands:`)
   for (const command of commands.values()) {
     console.log(chalk.bgBlue.white('Command Name:'), command.name);
   }
   const guilds = client.guilds.cache.map(guild => guild.id);
-  if (config.available) {
+  if (config.rollingAllowed) {
     client.user.setStatus(PresenceUpdateStatus.Online);
     console.log(`Set status to ${chalk.green('Online')}`);
   }
@@ -898,7 +907,7 @@ client.on('interactionCreate', async interaction => {
   const username = interaction.user.username;
 
   if (interaction.commandName === 'roll') {
-    if (config.available) {
+    if (config.rollingAllowed) {
       await roll(interaction)
     }
     else {
@@ -1108,7 +1117,7 @@ client.on('interactionCreate', async interaction => {
         .setTitle(`${interaction.user.username}'s Inventory`)
         .setDescription('📦 Your inventory is empty.')
         .setColor(null)
-        .setFooter({iconURL: null, text: "Note: Please do NOT use any two potions at the same time! I haven't made it disallow that yet and it won't give you more luck!"});
+        .setFooter({ iconURL: null, text: "Note: Please do NOT use any two potions at the same time! I haven't made it disallow that yet and it won't give you more luck!" });
 
       return interaction.reply({ embeds: [emptyEmbed] });
     }
@@ -1121,7 +1130,7 @@ client.on('interactionCreate', async interaction => {
       .setTitle(`${interaction.user.username}'s Inventory`)
       .setDescription(description)
       .setColor(0x00bfff)
-      .setFooter({iconURL: null, text: "Note: Please do NOT use any two potions at the same time! I haven't made it disallow that yet and it won't give you more luck!"});
+      .setFooter({ iconURL: null, text: "Note: Please do NOT use any two potions at the same time! I haven't made it disallow that yet and it won't give you more luck!" });
 
     try {
       await interaction.reply({ embeds: [embed] });
@@ -2080,36 +2089,54 @@ client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isButton()) return;
 
   if (interaction.customId === 'again') {
-    try {
-      await interaction.deferUpdate(); // acknowledge the click
-
-      // Disable the button on the original message
-      const disabledButton = new ButtonBuilder()
-        .setCustomId('again')
-        .setLabel('Roll Again')
-        .setStyle(ButtonStyle.Secondary)
-        .setDisabled(true);
-
-      const row = new ActionRowBuilder().addComponents(disabledButton);
-
-      let disabled = false;
+    if (config.rollingAllowed) {
       try {
-        if (interaction.message?.editable) {
-          await interaction.message.edit({ components: [row] });
-          disabled = true;
+        await interaction.deferUpdate(); // acknowledge the click
+
+        // Disable the button on the original message
+        const disabledButton = new ButtonBuilder()
+          .setCustomId('again')
+          .setLabel('Roll Again')
+          .setStyle(ButtonStyle.Secondary)
+          .setDisabled(true);
+
+        const row = new ActionRowBuilder().addComponents(disabledButton);
+
+        let disabled = false;
+        try {
+          if (interaction.message?.editable) {
+            await interaction.message.edit({ components: [row] });
+            disabled = true;
+          }
+        } catch (err) {
+          if (err.code === 10008) {
+            //console.warn("⚠️ Could not disable button (message deleted or ephemeral).");
+          } else {
+            console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Failed to disable Roll Again button:`)}`, err);
+          }
         }
+
+        // Always roll regardless of whether disabling succeeded
+        await roll(interaction, true, !disabled); // third arg: force ephemeral if disable failed
       } catch (err) {
-        if (err.code === 10008) {
-          //console.warn("⚠️ Could not disable button (message deleted or ephemeral).");
+        console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Roll Again button error:`)}`, err);
+      }
+    } else {
+      console.log(`${chalk.bgRedBright.white('ERROR')} Cannot roll! Roll service unavailable`)
+      const replyEmbed = new EmbedBuilder()
+        .setColor(0xe65a5a)
+        .setTitle('Unavailable')
+        .setDescription('# The bot is currently being tested, updated, or is not available at this point.')
+        .setFooter({ text: 'Please try again later.', iconURL: null });
+      try {
+        await interaction.reply({ embeds: [replyEmbed] });
+      } catch (err) {
+        if (err.code === 10062) {
+          console.warn("⚠️ Interaction expired before reply could be sent.");
         } else {
-          console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Failed to disable Roll Again button:`)}`, err);
+          console.error("❌ Failed to reply to interaction:", err);
         }
       }
-
-      // Always roll regardless of whether disabling succeeded
-      await roll(interaction, true, !disabled); // third arg: force ephemeral if disable failed
-    } catch (err) {
-      console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Roll Again button error:`)}`, err);
     }
   }
 });

@@ -1,8 +1,8 @@
 {
-    "token": "[your bot token]",
-    "available": true,
-    "clientId": "[your bot's client id]",
-    "logHookUrlComment": "loghookurl let's you POST roll results to a webhook if you want, it can easily get rate limited though (delete this value once you've read it)",
-    "logHookUrl": null,
-    "adminId":"[insert your discord user id to be able to use admin commands]"
+    "token": "",
+    "clientId": "",
+    "adminId": "",
+    "rollingAllowed": true,
+    "identifyConsoleLoggedRolls": false,
+    "rollLogWebhookUrl": null
 }
