@@ -1761,8 +1761,8 @@ client.on('interactionCreate', async interaction => {
   if (interaction.commandName === 'gurt') {
     try {
       await interaction.deferReply();
-      const theThing = Math.floor(Math.random() * 12);
-      console.log('I just gurted ('+theThing+')')
+      const theThing = Math.floor(Math.random() * 13);
+      console.log('I just gurted (' + theThing + ')')
       if (theThing == 0) {
         await interaction.editReply('yo');
       } else if (theThing == 1) {
@@ -1783,7 +1783,7 @@ client.on('interactionCreate', async interaction => {
         const winnerEmbed = new EmbedBuilder()
           .setTitle('Congratulations!')
           .setDescription(`# You won!\nThis message has a 1 in 50,000,000 chance of appearing!\nAs a congratulatory gift, please claim one of the rewards below.`)
-          .setFooter({iconURL: null, text:'If the button interaction fails, it means the offer has expired.'})
+          .setFooter({ iconURL: null, text: 'If the button interaction fails, it means the offer has expired.' })
         const rewards = new ActionRowBuilder()
           .addComponents(
             new ButtonBuilder()
@@ -1799,21 +1799,40 @@ client.on('interactionCreate', async interaction => {
               .setLabel('Death')
               .setStyle(ButtonStyle.Danger)
           );
-          await interaction.editReply({
-            embeds: [winnerEmbed],
-            components: [rewards],
-          });
+        await interaction.editReply({
+          embeds: [winnerEmbed],
+          components: [rewards],
+        });
       } else if (theThing == 9) {
         await interaction.editReply(`Stop that. Stop it now.`)
       } else if (theThing == 10) {
         const witheredEmbed = new EmbedBuilder()
           .setTitle('You rolled...')
           .setDescription(`# Ruins : Withered\n[ 1 in 800,000,000 ]`)
-          .setFooter({iconURL: null, text: 'Dev Luck Roll'})
+          .setFooter({ iconURL: null, text: 'Dev Luck Roll' })
           .setColor(0xbb2022)
-        await interaction.editReply({ content: `<@${interaction.user.id}>`, embeds: [witheredEmbed]})
+        await interaction.editReply({ content: `<@${interaction.user.id}>`, embeds: [witheredEmbed] })
       } else if (theThing == 11) {
         await interaction.editReply(`https://cdn.discordapp.com/attachments/1269046535144869900/1395181210816479314/IMG_3290.jpg?ex=68798341&is=687831c1&hm=8b3a1d0008f196666a3fb68ea763c2909f44bdeeab32a4bc019eda1dfe67b11e&`)
+      } else if (theThing == 12) {
+        const chooseAuraEmbed = new EmbedBuilder()
+          .setDescription(`# Hey!\n> As a thanks for using the bot, you may choose an aura to obtain for free!\n> Here are your options 👇`)
+        const choices = new ActionRowBuilder()
+          .addComponents(
+            new ButtonBuilder()
+              .setCustomId('1')
+              .setLabel('Luminosity')
+              .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
+              .setCustomId('2')
+              .setLabel('Oppression')
+              .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
+              .setCustomId('3')
+              .setLabel('Oblivion')
+              .setStyle(ButtonStyle.Secondary)
+          )
+        await interaction.editReply({ embeds: [chooseAuraEmbed], components: [choices] })
       } else {
         await interaction.editReply(`error: couldn't gurt`)
       }
@@ -2180,6 +2199,14 @@ client.on('interactionCreate', async interaction => {
       await interaction.respond([]); // avoid crash
     } catch { }
   }
+});
+
+client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isButton()) return;
+  function hellNo() {
+    interaction.reply("`claim() function failed: No such variable exists: chooseEmbed (index.js:2207)`")
+  }
+  if (interaction.customId === '1') { hellNo() } else if (interaction.customId === '2') { hellNo() } else if (interaction.customId === '3') { hellNo() }
 });
 
 client.on(Events.InteractionCreate, async interaction => {
