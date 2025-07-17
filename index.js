@@ -604,7 +604,7 @@ const auraValues = Object.fromEntries(
 );
 
 async function roll(interaction, isButton = false, couldntDisable) {
-  let rollPool = buildAuraPool(currentBiome.name, currentBiome.isDaytime);
+  // let rollPool = buildAuraPool(currentBiome.name, currentBiome.isDaytime);
   const usingMiniPotion = activeMiniHevUsers.has(interaction.user.id);
   const usingBigPotion = activeBigHevUsers.has(interaction.user.id);
   const usingDevPotionOfDoom = activeDevPotionOfDoomUsers.has(interaction.user.id);
