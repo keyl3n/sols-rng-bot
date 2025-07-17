@@ -377,6 +377,7 @@ function getUserAuraSummary(userId) {
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
+  new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
   // new SlashCommandBuilder().setName('myrolls').setDescription('Check how many times you’ve rolled.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
   //new SlashCommandBuilder().setName('roll leaderboard').setDescription('See the top rollers.'),
@@ -1193,7 +1194,7 @@ client.on('interactionCreate', async interaction => {
             user = { username: "Unknown User" };
           }
 
-          return `**${index + 1}.** ${user.username} — **${score}** collected stat`;
+          return `**${index + 1}.** ${user.username} — **${score.toLocaleString()}** collected stat`;
         })
       );
 
@@ -1216,7 +1217,7 @@ client.on('interactionCreate', async interaction => {
             user = { username: "Unknown User" };
           }
 
-          return `**${index + 1}.** ${user.username} — **${count}** roll${count === 1 ? '' : 's'}`;
+          return `**${index + 1}.** ${user.username} — **${count.toLocaleString()}** roll${count === 1 ? '' : 's'}`;
         })
       );
 
@@ -1759,26 +1760,62 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'gurt') {
     try {
-      console.log('I just gurted')
-      const theThing = Math.floor(Math.random() * 8);
+      await interaction.deferReply();
+      const theThing = Math.floor(Math.random() * 12);
+      console.log('I just gurted ('+theThing+')')
       if (theThing == 0) {
-        await interaction.reply('yo');
+        await interaction.editReply('yo');
       } else if (theThing == 1) {
-        await interaction.reply('sybau');
+        await interaction.editReply('sybau');
       } else if (theThing == 2) {
-        await interaction.reply(`Meet up @ 5°22'08.8"S 66°45'19.1"W`)
+        await interaction.editReply(`Meet up @ 5°22'08.8"S 66°45'19.1"W`)
       } else if (theThing == 3) {
-        await interaction.reply(`Idk what that means`)
+        await interaction.editReply(`Idk what that means`)
       } else if (theThing == 4) {
-        await interaction.reply(`STOPPPP`)
+        await interaction.editReply(`STOPPPP`)
       } else if (theThing == 5) {
-        await interaction.reply(`<@1065016071414890597>`)
+        await interaction.editReply(`<@1065016071414890597>`)
       } else if (theThing == 6) {
-        await interaction.reply(`https://media.discordapp.net/attachments/1367301579996266717/1394490992144416769/image.png?ex=68770070&is=6875aef0&hm=aac557498483f68edd21cb0d4951cd586fb5e43e6e4458c364ea54dbf9e9eb72&=`)
+        await interaction.editReply(`https://media.discordapp.net/attachments/1367301579996266717/1394490992144416769/image.png?ex=68770070&is=6875aef0&hm=aac557498483f68edd21cb0d4951cd586fb5e43e6e4458c364ea54dbf9e9eb72&=`)
       } else if (theThing == 7) {
-        await interaction.reply(`Gurt gurt gurtttt lalalalala`)
+        await interaction.editReply(`Gurt gurt gurtttt lalalalala`)
+      } else if (theThing == 8) {
+        const winnerEmbed = new EmbedBuilder()
+          .setTitle('Congratulations!')
+          .setDescription(`# You won!\nThis message has a 1 in 50,000,000 chance of appearing!\nAs a congratulatory gift, please claim one of the rewards below.`)
+          .setFooter({iconURL: null, text:'If the button interaction fails, it means the offer has expired.'})
+        const rewards = new ActionRowBuilder()
+          .addComponents(
+            new ButtonBuilder()
+              .setCustomId('primary')
+              .setLabel('10,000,000 Robux')
+              .setStyle(ButtonStyle.Success),
+            new ButtonBuilder()
+              .setCustomId('secondary')
+              .setLabel('$100,000 USD')
+              .setStyle(ButtonStyle.Success),
+            new ButtonBuilder()
+              .setCustomId('tertiary')
+              .setLabel('Death')
+              .setStyle(ButtonStyle.Danger)
+          );
+          await interaction.editReply({
+            embeds: [winnerEmbed],
+            components: [rewards],
+          });
+      } else if (theThing == 9) {
+        await interaction.editReply(`Stop that. Stop it now.`)
+      } else if (theThing == 10) {
+        const witheredEmbed = new EmbedBuilder()
+          .setTitle('You rolled...')
+          .setDescription(`# Ruins : Withered\n[ 1 in 800,000,000 ]`)
+          .setFooter({iconURL: null, text: 'Dev Luck Roll'})
+          .setColor(0xbb2022)
+        await interaction.editReply({ content: `<@${interaction.user.id}>`, embeds: [witheredEmbed]})
+      } else if (theThing == 11) {
+        await interaction.editReply(`https://cdn.discordapp.com/attachments/1269046535144869900/1395181210816479314/IMG_3290.jpg?ex=68798341&is=687831c1&hm=8b3a1d0008f196666a3fb68ea763c2909f44bdeeab32a4bc019eda1dfe67b11e&`)
       } else {
-        await interaction.reply(`error: couldn't gurt`)
+        await interaction.editReply(`error: couldn't gurt`)
       }
     } catch (err) {
       if (err.code === 10062) {

@@ -1,3 +1,10 @@
+## Sol's RNG Bot v3.4.3
+### Return of Gurt
+- The Gurt command is back!
+- It also has more possible responses
+### Tweak to leaderboards
+- Roll counts and collected stat amounts in the leaderboards will now have commas in them
+
 ## Sol's RNG Bot v3.4.2
 Just reorganized and renamed some stuff in config.json
 ALSO
