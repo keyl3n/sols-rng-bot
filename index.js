@@ -377,7 +377,8 @@ function getUserAuraSummary(userId) {
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
-  new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
+  // new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
+  // new SlashCommandBuilder().setName('yo').setDescription('Yo!'),
   // new SlashCommandBuilder().setName('myrolls').setDescription('Check how many times you’ve rolled.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
   //new SlashCommandBuilder().setName('roll leaderboard').setDescription('See the top rollers.'),
@@ -1070,12 +1071,13 @@ client.on('interactionCreate', async interaction => {
     const userAuras = userData[userId];
 
     if (!userAuras || Object.keys(userAuras).length === 0) {
+      const emptyCollectionEmbed = new EmbedBuilder()
+        .setTitle(`${interaction.user.username}'s Aura Collection`)
+        .setDescription('You haven’t rolled any auras yet.')
+        .setColor(0x999999)
       return interaction.reply({
         embeds: [
-          new EmbedBuilder()
-            .setTitle(`${interaction.user.username}'s Aura Collection`)
-            .setDescription('You haven’t rolled any auras yet.')
-            .setColor(0x999999)
+          emptyCollectionEmbed
         ]
       });
     }
@@ -1141,7 +1143,6 @@ client.on('interactionCreate', async interaction => {
         .setDescription('📦 Your inventory is empty.')
         .setColor(null)
         .setFooter({ iconURL: null, text: "Note: Please do NOT use any two potions at the same time! I haven't made it disallow that yet and it won't give you more luck!" });
-
       return interaction.reply({ embeds: [emptyEmbed] });
     }
 
@@ -1845,6 +1846,39 @@ client.on('interactionCreate', async interaction => {
     }
   }
 
+  if (interaction.commandName === 'yo') {
+    await interaction.deferReply();
+    const theThing = Math.floor(Math.random() * 7);
+    console.log('I just yo-ed (' + theThing + ')')
+    if (theThing == 0) {
+      await interaction.editReply('YO (not gurt)');
+    } else if (theThing == 1) {
+      await interaction.editReply('wsp wspppp');
+    } else if (theThing == 2) {
+      await interaction.editReply(`Continue`)
+    } else if (theThing == 3) {
+      await interaction.editReply('🗑️ `userdata.json` deleted.')
+    } else if (theThing == 4) {
+      await interaction.editReply(`Ok`)
+    } else if (theThing == 5) {
+      await interaction.editReply(`<@686748689988976721> We all hate you`)
+    } else if (theThing == 6) {
+      const reallyDeleteUserDataInquiry = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+          .setCustomId('reallydelete')
+          .setLabel('Delete')
+          .setStyle(ButtonStyle.Danger),
+        new ButtonBuilder()
+          .setCustomId('nobro')
+          .setLabel('Cancel')
+          .setStyle(ButtonStyle.Secondary))
+      await interaction.editReply({ content: 'REALLY delete all user data?', components: [reallyDeleteUserDataInquiry] })
+    } else {
+      await interaction.editReply(`Something bad happened`)
+    }
+  }
+
+
   if (interaction.commandName === 'useitem') {
     const item = interaction.options.getString('item');
     const userId = interaction.user.id;
@@ -1986,6 +2020,7 @@ client.on('interactionCreate', async interaction => {
       //.setTitle(`**${aura.name}**`)
       .setColor(color)
       .setDescription(`# ${aura.name}\n${description}\n\n**Rarity**\n[ 1 in ${chanceIn.toLocaleString()} ]\n\n**You own:**\n${auraCount}\n\n**Owned by:**\n${ownerCount} user${ownerCount !== 1 ? 's' : ''}`);
+
 
     // Determine condition field if aura is biome-exclusive
     let conditionLabel = null;
@@ -2208,6 +2243,18 @@ client.on(Events.InteractionCreate, async interaction => {
   }
   if (interaction.customId === '1') { hellNo() } else if (interaction.customId === '2') { hellNo() } else if (interaction.customId === '3') { hellNo() }
 });
+
+/* client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isButton()) return;
+  if (interaction.customId === 'reallydelete') {
+    console.log(`Successfully deleted data, ${interaction.user.username}.`)
+    interaction.reply('Successfully deleted data.')
+  }
+  else if (interaction.customId === 'nobro') {
+    console.log(`I don't care, ${interaction.user.username}, I did it anyway.`)
+    interaction.reply("I don't care, I did it anyway")
+  }
+}); */
 
 client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isButton()) return;

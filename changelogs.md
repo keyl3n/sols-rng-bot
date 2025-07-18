@@ -1,3 +1,9 @@
+## Sol's RNG Bot v3.4.4
+### Gurt is Gone
+- He's gone.
+### No more Yo, either
+- Sorry!
+
 ## Sol's RNG Bot v3.4.3
 ### Return of Gurt
 - The Gurt command is back!
