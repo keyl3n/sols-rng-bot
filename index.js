@@ -377,7 +377,7 @@ function getUserAuraSummary(userId) {
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
-  // new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
+  new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
   // new SlashCommandBuilder().setName('yo').setDescription('Yo!'),
   // new SlashCommandBuilder().setName('myrolls').setDescription('Check how many times you’ve rolled.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
@@ -699,6 +699,14 @@ async function roll(interaction, isButton = false, couldntDisable) {
 
   const the_aura = getRandomAura(auraPool);
 
+  // calculate coins from aura rarity
+  const auraChanceIn = Math.round(1 / the_aura.weight);
+  const coinsEarned = Math.min(auraChanceIn, 1000);
+
+  // give the coins as an item
+  giveItem(interaction.user.id, 'Coin', coinsEarned);
+  // console.log(`💰 ${interaction.user.tag} earned ${coinsEarned} coins`);
+
   const percentage = the_aura.weight * 100;
   const chanceIn = Math.round(100 / percentage);
   const isEphemeral = chanceIn < 998;
@@ -738,7 +746,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
 
 
   const { gotPotion, totalRolls } = recordRoll(interaction.user.id);
-  let footerText = `Roll #${totalRolls.toLocaleString()}`;
+  let footerText = `Roll #${totalRolls.toLocaleString()} | +${coinsEarned} coins`;
   let description = `# ${the_aura.name}\n[ 1 in ${chanceIn.toLocaleString()} ]`;
 
   //if (gotPotion) {
