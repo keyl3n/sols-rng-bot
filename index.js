@@ -10,13 +10,16 @@ const userDataPath = path.join(__dirname, 'userdata.json');
 const itemsPath = './useritems.json';
 const blacklistPath = './lbBlacklist.json';
 const auraDescriptionsPath = path.join(__dirname, 'auradescriptions.json');
-const aurasPath = './auras.json';
-const baseAuras = JSON.parse(fs.readFileSync('./auras.json'));
-const biomeAuras = JSON.parse(fs.readFileSync('./biomeAuras.json'));
+const aurasPath = './auras/auras.json';
+const baseAuras = JSON.parse(fs.readFileSync('./auras/auras.json'));
+const biomeAuras = JSON.parse(fs.readFileSync('./auras/biomeAuras.json'));
 const allAuras = [...baseAuras, ...biomeAuras];
 let biomeAurasByName = {};
 const biomelogsPath = './biomelogs.json';
 let biomelogWebhooks = fs.existsSync(biomelogsPath) ? JSON.parse(fs.readFileSync(biomelogsPath)) : {};
+
+// items that are valid but cannot simply be used as if they were a potion or rune
+const unusableItems = ["Coin"]
 
 function saveBiomelogs() {
   fs.writeFileSync(biomelogsPath, JSON.stringify(biomelogWebhooks, null, 2));
@@ -35,10 +38,10 @@ let auras = [];
 if (fs.existsSync(aurasPath)) {
   auras = JSON.parse(fs.readFileSync(aurasPath));
 }
-const dreamspaceAuras = JSON.parse(fs.readFileSync('./dreamspaceAuras.json'));
-const glitchedAuras = JSON.parse(fs.readFileSync('./glitchedAuras.json'));
-const pumpkinMoonAuras = JSON.parse(fs.readFileSync('./pumpkinMoonAuras.json'));
-const graveyardAuras = JSON.parse(fs.readFileSync('./graveyardAuras.json'));
+const dreamspaceAuras = JSON.parse(fs.readFileSync('./auras/dreamspaceAuras.json'));
+const glitchedAuras = JSON.parse(fs.readFileSync('./auras/glitchedAuras.json'));
+const pumpkinMoonAuras = JSON.parse(fs.readFileSync('./auras/pumpkinMoonAuras.json'));
+const graveyardAuras = JSON.parse(fs.readFileSync('./auras/graveyardAuras.json'));
 
 const combinedAuras = [
   ...auras,
@@ -83,7 +86,7 @@ try {
 
 function reloadAuraPool() {
   try {
-    auras = JSON.parse(fs.readFileSync('./auras.json', 'utf8'));
+    auras = JSON.parse(fs.readFileSync('./auras/auras.json', 'utf8'));
 
     // Refresh aurasWithWeights
     aurasWithWeights = auras
@@ -138,7 +141,8 @@ const validItems = [
   "Mini Heavenly Potion",
   "BIG Heavenly Potion",
   "DEV POTION OF DOOM",
-  "Gurt's Hatred"
+  "Gurt's Hatred",
+  "Coin"
   // Add more items here as needed
 ];
 
@@ -1893,11 +1897,27 @@ client.on('interactionCreate', async interaction => {
     const items = getUserItems(userId);
 
     if (!validItems.includes(item)) {
-      return interaction.reply({ content: '<:no:1390740593306632394> Invalid item.', });
+      const invalidItemEmbed = new EmbedBuilder()
+        .setTitle('Error')
+        .setDescription('<:no:1390740593306632394> Invalid item.')
+        .setColor(0xdb5144)
+      return interaction.reply({ embeds: [invalidItemEmbed] });
     }
 
     if (!items[item] || items[item] < 1) {
-      return interaction.reply({ content: '<:no:1390740593306632394> You don’t have that item.' });
+      const unownedItemEmbed = new EmbedBuilder()
+        .setTitle('Error')
+        .setDescription('<:no:1390740593306632394> You don’t have that item.')
+        .setColor(0xdb5144)
+      return interaction.reply({ embeds: [unownedItemEmbed] });
+    }
+
+    if (unusableItems.includes(item)) {
+      const cannotUseItemEmbed = new EmbedBuilder()
+        .setTitle('Error')
+        .setDescription('<:no:1390740593306632394> This item cannot be used.')
+        .setColor(0xdb5144)
+      return interaction.reply({ embeds: [cannotUseItemEmbed] });
     }
 
     // Check before consuming
@@ -2192,16 +2212,19 @@ client.on('interactionCreate', async interaction => {
     }
 
     // USEITEM > ONLY SHOW USER'S ITEMS
-    if (command === 'useitem') {
-      const items = getUserItems(interaction.user.id);
-      const owned = Object.keys(items).filter(
-        item => item.toLowerCase().includes(focused.toLowerCase())
-      ).slice(0, 25);
+if (command === 'useitem') {
+  const items = getUserItems(interaction.user.id);
 
-      return await interaction.respond(
-        owned.map(item => ({ name: item, value: item }))
-      );
-    }
+  const owned = Object.keys(items).filter(
+    item =>
+      item.toLowerCase().includes(focused.toLowerCase()) &&
+      !unusableItems.includes(item)
+  ).slice(0, 25);
+
+  return await interaction.respond(
+    owned.map(item => ({ name: item, value: item }))
+  );
+}
 
     if (interaction.commandName === 'aurainfo') {
       const focused = interaction.options.getFocused();

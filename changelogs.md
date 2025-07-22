@@ -1,3 +1,15 @@
+# Sol's RNG Bot v3.5.0
+## Bugfix
+- Added Coins to the `validItems` array (I forgot to do that earlier)  
+## New Internal Feature
+### `unusableItems`
+- Any items added to this array will not show up in the autocomplete for `/useitem` and will give an error message when someone attempts to use one of them  
+## New embeds
+- If someone tries to use an item that doesn't exist, they don't have, or cannot be used, an embed will show why the `/useitem` command could not be completed instead of just a normal message.  
+## Rearranged files
+- `auras.json`, `biomeAuras.json`, `glitchedAuras.json`, `dreamspaceAuras.json`, `graveyardAuras.json`, and `pumpkinMoonAuras.json` are now in the new `auras` folder.
+<hr>
+
 ## Sol's RNG Bot v3.4.5
 ### Coins
 - You can now obtain coins from rolling! These will be given a use in an update soon.  
