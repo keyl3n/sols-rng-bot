@@ -746,7 +746,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
 
 
   const { gotPotion, totalRolls } = recordRoll(interaction.user.id);
-  let footerText = `Roll #${totalRolls.toLocaleString()} | +${coinsEarned} coins`;
+  let footerText = `Roll #${totalRolls.toLocaleString()} | +${coinsEarned.toLocaleString()} Coins`;
   let description = `# ${the_aura.name}\n[ 1 in ${chanceIn.toLocaleString()} ]`;
 
   //if (gotPotion) {
@@ -1273,6 +1273,14 @@ client.on('interactionCreate', async interaction => {
 
       const chanceIn = the_aura.chanceIn || 1;
 
+      // calculate coins from aura rarity
+      const auraChanceIn = Math.round(the_aura.chanceIn);
+      const coinsEarned = Math.min(auraChanceIn, 1000);
+
+      // give the coins as an item
+      giveItem(interaction.user.id, 'Coin', coinsEarned);
+      // console.log(`💰 ${interaction.user.tag} earned ${coinsEarned} coins`);
+
       // 🌈 Match roll() embed color logic
       let color;
       if (chanceIn >= 1_000_000_000) {
@@ -1299,7 +1307,7 @@ client.on('interactionCreate', async interaction => {
         .setColor(color)
         .setTitle('You rolled...')
         .setDescription(`# ${the_aura.name}\n[ 1 in ${chanceIn.toLocaleString()} ]`)
-        .setFooter({ text: 'Roll (forced)' });
+        .setFooter({ text: 'Roll (forced) | '+coinsEarned.toLocaleString()+' Coins' });
 
       // Ensure the aura is granted to the user
       if (!userData[interaction.user.id]) userData[interaction.user.id] = {};
@@ -2208,19 +2216,19 @@ client.on('interactionCreate', async interaction => {
     }
 
     // USEITEM > ONLY SHOW USER'S ITEMS
-if (command === 'useitem') {
-  const items = getUserItems(interaction.user.id);
+    if (command === 'useitem') {
+      const items = getUserItems(interaction.user.id);
 
-  const owned = Object.keys(items).filter(
-    item =>
-      item.toLowerCase().includes(focused.toLowerCase()) &&
-      !unusableItems.includes(item)
-  ).slice(0, 25);
+      const owned = Object.keys(items).filter(
+        item =>
+          item.toLowerCase().includes(focused.toLowerCase()) &&
+          !unusableItems.includes(item)
+      ).slice(0, 25);
 
-  return await interaction.respond(
-    owned.map(item => ({ name: item, value: item }))
-  );
-}
+      return await interaction.respond(
+        owned.map(item => ({ name: item, value: item }))
+      );
+    }
 
     if (interaction.commandName === 'aurainfo') {
       const focused = interaction.options.getFocused();

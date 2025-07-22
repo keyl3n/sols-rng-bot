@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.5.1
+### Thing
+- `/dev forceroll` now gives coins like normal rolls
+
 # Sol's RNG Bot v3.5.0
 ## Bugfix
 - Added Coins to the `validItems` array (I forgot to do that earlier)  
