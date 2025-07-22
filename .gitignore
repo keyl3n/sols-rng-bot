@@ -1,6 +1,7 @@
 node_modules/
 backups/
 .vs/
+.vscode/
 oldAurasCollection.txt
 auras.json.old
 lbBlacklist.json

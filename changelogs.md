@@ -1,3 +1,10 @@
+## Sol's RNG Bot v3.4.5
+### Coins
+- You can now obtain coins from rolling! These will be given a use in an update soon.  
+The way they work is:
+The rarity of the aura you roll is 1 in x. x = the "chance in" of your aura AND how many coins you get from the roll.
+If the rarity of the aura you roll exceeds 1 in 1,000, you will just be given 1,000 coins.
+
 ## Sol's RNG Bot v3.4.4
 ### Gurt is Gone
 - He's gone.
