@@ -383,13 +383,9 @@ const commands = [
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
   new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
   // new SlashCommandBuilder().setName('yo').setDescription('Yo!'),
-  // new SlashCommandBuilder().setName('myrolls').setDescription('Check how many times you’ve rolled.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
-  //new SlashCommandBuilder().setName('roll leaderboard').setDescription('See the top rollers.'),
-  //new SlashCommandBuilder().setName('stat leaderboard').setDescription('See the people with the highest collected stat.'),
   new SlashCommandBuilder().setName('collection').setDescription(`Shows the auras you've rolled.`),
   new SlashCommandBuilder().setName('inventory').setDescription("Check what's in your item inventory."),
-  //new SlashCommandBuilder().setName('forceroll').setDescription('Force a specific aura roll (testing only)').addStringOption(option => option.setName('name').setDescription('Name of the aura to roll').setRequired(true)
   new SlashCommandBuilder().setName('dev').setDescription('Developer tools')
     .addSubcommand(sub =>
       sub.setName('forceroll')
