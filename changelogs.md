@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.5.3
+### My bad guys
+- Fixed a critical bug that would pretty much cause rollcounts.json to be reset every time the bot went online
+
 ## Sol's RNG Bot v3.5.2
 ### Say goodbye
 - `/gurt` and `/yo` are forever erased.
