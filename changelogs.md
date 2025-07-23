@@ -1,3 +1,9 @@
+## Sol's RNG Bot v3.5.2
+### Say goodbye
+- `/gurt` and `/yo` are forever erased.
+### Moving house
+- User data files now have their own folder!
+
 ## Sol's RNG Bot v3.5.1
 ### Thing
 - `/dev forceroll` now gives coins like normal rolls

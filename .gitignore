@@ -2,11 +2,9 @@ node_modules/
 backups/
 .vs/
 .vscode/
+userdata/
 oldAurasCollection.txt
 auras.json.old
 lbBlacklist.json
-rollcounts.json
-userdata.json
-useritems.json
 biomelogs.json
 biomeState.json
