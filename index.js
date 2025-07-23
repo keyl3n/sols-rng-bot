@@ -154,7 +154,7 @@ const activeGurtsHatredUsers = new Set();
 // Load counts from file
 let auraCounts = {};
 try {
-  auraCounts = JSON.parse(fs.readFileSync('rollcounts.json'));
+  auraCounts = JSON.parse(fs.readFileSync('./userdata/rollcounts.json'));
 } catch (err) {
   console.log(chalk.yellowBright('No existing roll counts file, starting fresh.'));
 }
