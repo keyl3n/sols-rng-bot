@@ -72,6 +72,7 @@ const biomeThumbnails = {
   "Starfall": "https://keylens-website.web.app/biomes/STARFALL.png",
   "Corruption": "https://keylens-website.web.app/biomes/CORRUPTION.png",
   "Null": "https://keylens-website.web.app/biomes/NULL.png",
+  "Scoobert": "https://keylens-website.web.app/biomes/joke-biomes/SCOOBERT.png",
   "Pumpkin Moon": "https://keylens-website.web.app/biomes/PUMPKIN%20MOON.png",
   "Graveyard": "https://keylens-website.web.app/biomes/GRAVEYARD.png",
   "Glitched": "https://keylens-website.web.app/biomes/GLITCHED.png",
@@ -612,51 +613,254 @@ async function roll(interaction, isButton = false, couldntDisable) {
   let auraPool;
 
   if (currentBiome.name === 'Dreamspace') {
-    auraPool = [
-      ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-      ...dreamspaceAuras.map(a => ({
-        name: a.name,
-        weight: 1 / a.chanceIn
-      }))
-    ];
+    if (usingBigPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99000);
+      activeBigHevUsers.delete(interaction.user.id); // consume
+    } else if (usingMiniPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 9999);
+      activeMiniHevUsers.delete(interaction.user.id); // consume
+    } else if (usingGurtsHatred) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 999990);
+      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99999998);
+      activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
+    } else {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ]
+    }
   } else if (currentBiome.name === 'Glitched') {
     // Use native biome rarities instead of normal
-    auraPool = [
-      ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-      ...biomeAuras
-        .filter(a => a.biomeRarity)
-        .map(a => {
-          const biomeChanceIn = Object.values(a.biomeRarity)[0];
-          return {
-            name: a.name,
-            weight: 1 / biomeChanceIn
-          };
-        }),
-      ...glitchedAuras.map(a => ({
-        name: a.name,
-        weight: 1 / a.chanceIn
-      }))
-    ];
+    if (usingBigPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...biomeAuras
+          .filter(a => a.biomeRarity)
+          .map(a => {
+            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            return {
+              name: a.name,
+              weight: 1 / biomeChanceIn
+            };
+          }),
+        ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99000);
+      activeBigHevUsers.delete(interaction.user.id); // consume
+    } else if (usingMiniPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...biomeAuras
+          .filter(a => a.biomeRarity)
+          .map(a => {
+            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            return {
+              name: a.name,
+              weight: 1 / biomeChanceIn
+            };
+          }),
+        ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 9999);
+      activeMiniHevUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...biomeAuras
+          .filter(a => a.biomeRarity)
+          .map(a => {
+            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            return {
+              name: a.name,
+              weight: 1 / biomeChanceIn
+            };
+          }),
+        ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99999998);
+      activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
+    } else if (usingGurtsHatred) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...biomeAuras
+          .filter(a => a.biomeRarity)
+          .map(a => {
+            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            return {
+              name: a.name,
+              weight: 1 / biomeChanceIn
+            };
+          }),
+        ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 999990);
+      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+    } else {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...biomeAuras
+          .filter(a => a.biomeRarity)
+          .map(a => {
+            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            return {
+              name: a.name,
+              weight: 1 / biomeChanceIn
+            };
+          }),
+        ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ]
+    }
   } else if (currentBiome.name === 'Pumpkin Moon') {
-    auraPool = [
-      ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-      ...pumpkinMoonAuras.map(a => ({
-        name: a.name,
-        weight: 1 / a.chanceIn
-      }))
-    ];
+    if (usingBigPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99000);
+      activeBigHevUsers.delete(interaction.user.id); // consume
+    } else if (usingMiniPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 9999);
+      activeMiniHevUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99999998);
+      activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
+    } else if (usingGurtsHatred) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 999990);
+      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+    } else {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ]
+    }
   } else if (currentBiome.name === 'Graveyard') {
-    auraPool = [
-      ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-      ...graveyardAuras.map(a => ({
-        name: a.name,
-        weight: 1 / a.chanceIn
-      }))
-    ];
+    if (usingBigPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99000);
+      activeBigHevUsers.delete(interaction.user.id); // consume
+    } else if (usingMiniPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 9999);
+      activeMiniHevUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99999998);
+      activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
+    } else if (usingGurtsHatred) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 999990);
+      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+    } else {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ]
+    }
   } else {
-    auraPool = buildAuraPool(currentBiome.name, currentBiome.isDaytime);
+    if (usingBigPotion) {
+      auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 99990);
+      activeBigHevUsers.delete(interaction.user.id); // consume
+    } else if (usingMiniPotion) {
+      auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 9999);
+      activeMiniHevUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 99999998);
+      activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
+    } else if (usingGurtsHatred) {
+      auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 999990);
+      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+    } else {
+      auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)]
+    }
   }
 
+  /*
   if (usingBigPotion) {
     auraPool = auraPool.filter(a => 1 / a.weight >= 99000);
     activeBigHevUsers.delete(interaction.user.id); // Consume BIG potion
@@ -693,7 +897,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
   if (activeGurtsHatredUsers.has(interaction.user.id)) {
     auraPool = auraPool.filter(a => 1 / a.weight >= 999999);
     activeGurtsHatredUsers.delete(interaction.user.id);
-  }
+  } */
 
   const the_aura = getRandomAura(auraPool);
 
@@ -814,7 +1018,11 @@ async function roll(interaction, isButton = false, couldntDisable) {
 }
 
 function getRandomAura(auras) {
-  const cumulativeAuras = buildCumulative(auras);
+  let total = 0;
+  const cumulativeAuras = auras.map(aura => {
+    total += aura.weight;
+    return { ...aura, cumulative: total };
+  });
   const roll = Math.random() * cumulativeAuras[cumulativeAuras.length - 1].cumulative;
 
   for (let aura of cumulativeAuras) {
@@ -837,11 +1045,11 @@ client.on('ready', async () => {
   const guilds = client.guilds.cache.map(guild => guild.id);
   if (config.rollingAllowed) {
     client.user.setStatus(PresenceUpdateStatus.Online);
-    console.log(`Set status to ${chalk.green('Online')}`);
+    console.log(`Set status to ${chalk.green('● Online')}`);
   }
   else {
     client.user.setStatus(PresenceUpdateStatus.Idle);
-    console.log(`Set status to ${chalk.yellow('Idle')}`);
+    console.log(`Set status to ${chalk.yellow('● Idle')}`);
   }
   for (const guild of client.guilds.cache.values()) {
     try {
@@ -1305,7 +1513,7 @@ client.on('interactionCreate', async interaction => {
         .setColor(color)
         .setTitle('You rolled...')
         .setDescription(`# ${the_aura.name}\n[ 1 in ${chanceIn.toLocaleString()} ]`)
-        .setFooter({ text: 'Roll (forced) | '+coinsEarned.toLocaleString()+' Coins' });
+        .setFooter({ text: 'Roll (forced) | ' + coinsEarned.toLocaleString() + ' Coins' });
 
       // Ensure the aura is granted to the user
       if (!userData[interaction.user.id]) userData[interaction.user.id] = {};

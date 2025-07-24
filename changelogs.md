@@ -1,3 +1,11 @@
+# Sol's RNG Bot v3.6.0
+## Hotfix
+- Fixed an issue that prevented Glitched biome (and maybe other biomes I honestly don't know) from having an effect when a potion was active for the user
+## New dev biome
+- Added a secret Scoobert biome (just for funsies!)
+## New Glitched biome aura
+- Defect, 1 in 49
+
 ## Sol's RNG Bot v3.5.3
 ### My bad guys
 - Fixed a critical bug that would pretty much cause rollcounts.json to be reset every time the bot went online

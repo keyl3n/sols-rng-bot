@@ -1,4 +1,5 @@
 [
+    { "name": "Defect", "chanceIn": 49 },
     { "name": "Fault", "chanceIn": 3000 },
     { "name": "Glitch", "chanceIn": 12210110 },
     { "name": "Oppression", "chanceIn": 220000000 }
