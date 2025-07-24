@@ -381,6 +381,7 @@ function getUserAuraSummary(userId) {
 
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
+  new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
   new SlashCommandBuilder().setName('collection').setDescription(`Shows the auras you've rolled.`),
@@ -1171,6 +1172,11 @@ client.on('interactionCreate', async interaction => {
       }
 
     }
+  }
+
+  if (interaction.commandName === 'gurt') {
+    await interaction.reply('No.')
+    await interaction.user.send("I'll find you. I'll find you if it's the last thing I do.")
   }
 
   if (interaction.commandName === 'profile') {

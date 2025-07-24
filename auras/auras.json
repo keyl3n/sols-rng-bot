@@ -96,12 +96,20 @@
     "chanceIn": 8192
   },
   {
+    "name": "Honey",
+    "chanceIn": 8335
+  },
+  {
     "name": "Lost Soul",
     "chanceIn": 9200
   },
   {
     "name": "Powered",
     "chanceIn": 16384
+  },
+  {
+    "name": "WATT",
+    "chanceIn": 32768
   },
   {
     "name": "Aquatic",
@@ -154,6 +162,10 @@
   {
     "name": "Celestial",
     "chanceIn": 350000
+  },
+  {
+    "name": "Warlock",
+    "chanceIn": 666000
   },
   {
     "name": "Kyawthuite",
@@ -330,5 +342,9 @@
   {
     "name": "Pixelation",
     "chanceIn": 1073741824
+  },
+  {
+    "name": "EQUINOX",
+    "chanceIn": 2500000000
   }
 ]

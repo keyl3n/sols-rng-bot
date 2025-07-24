@@ -28,10 +28,12 @@
   "Flushed : Lobotomy": "197.18.25.112",
   "Hazard": "Constant destruction of life.",
   "Hazard : Rays": "Constant destruction of life.",
+  "Honey": "Sticky honey with a sweet fragrance drenches your body. Be careful not to get stung by bees.",
   "Undead": "failed to die...",
   "Undead : Devil": "The tiny demon",
   "Corrosive": "It's slowly corrupting everything.",
   "Powered": "I feel like I've become more powerful!",
+  "WATT": "You feel a thrilling surge of electric energy coursing through your body.",
   "Aquatic": "It represents the flow of **water**.",
   "Aquatic : Flame": "It represents the flow of **flame**.",
   "Starlight": "This starlight with mysterious *powers* infused will follow you persistently, illuminating the path.",
@@ -53,6 +55,7 @@
   "BOUNDED : UNBOUND": "When news spread that this being had awoken, people trembled in fear. However, something was odd; the creature had awoken but showed no signs of activity. Yet, it was too early for assumptions. It could be just recovering it's strength.",
   "Celestial": "An individual with a sacredness that seems to have descended from *heaven* is hovering around and delivering words of *blessing*",
   "Celestial : Divine": "EMPTY(?)",
+  "Warlock": "'Warlock' is actually the name of the sword. Bound to a devious demon familiar, this sword grants immense power, but it constantly drags its wielder into terrible incidents and relentlessly seeks to claim their life.",
   "Kyawthuite": "Long, long ago, there was a boy who stayed alone in the empty space of a deep cave. He is still waiting for the day when he can sit on the moon together with the girl who suddenly left when he was young, somewhere in the forest and talk again, once in a thousand years, in the deepest part of the forest...",
   "Arcane": "A **spell** found in the ruins of an ancient civilization. This swaying silhouette that seems to possess it's own consciousness has a record of completely erasing one civilization from history.",
   "Undefined": "[ DESCRIPTION MISSING ]",
@@ -106,5 +109,6 @@
   "Aegis": "Aegis, Named after the 'Shield of The Sky'. Aegis is an anti-star satellite weapon currently being restored by the Science Foundation. It has existed in space for an incredibly long time.  During an era when wizards ruled the world, a group of engineers, discontent with this, sought the blessing of the [God of Knowledge]. Over half a century, they passed down their craft, culminating in this technological marvel. Its highest output is powerful enough to collapse a star, but the downside is that after use, the weapon cannot be operated for a prolonged period. Throughout history, this weapon has been used only twice.",
   "Pixelation": "🌐✨🔥【1000% REAL】⁉️✨🌐 💿『A mysterious “E.G.O” sealed inside the DIGITAL WORLD!!』💿  🎶 MAX addictive beats + 💥 dazzling color FX = 🧠 Mind-blown immersion‼️  ❓Why does it exist? NOBODY KNOWS... 👉 BUT WHO CARES?!  📢💯💯TOTALLY! HARMLESS!💯💯📢 🚨※Absolutely ZERO danger to users!! Like, NEGATIVE DANGER!!🚨  ⚠️💬“This description contains 0% lies and 1,000,000% TRUTH!”💬⚠️",
   "Oppression": "Once in the past, there existed a being with immense and unstable power, strong enough to drive the world to the brink of collapse. This being left cracks across the world and gradually expanded its influence. The world's authorities united to stop it, using every means available, but ultimately, they failed. In the end, 『God』 confronted the being, and though the being defied even 『God』, when 『God』 drew his sword and struck, all the cracks left by the being were wiped clean. It seemed like everything had finally ended. The world regained its peace, and authorities sighed in relief. ...But is this truly the end? The remnants of that power did not disappear. Perhaps this is just the beginning. This story... is not over yet.",
-  "Glitch": ".-- .... .- - ..--.. -. --- --..-- .. - .----. ... .-. .. -.. .. -.-. ..- .-.. --- ..- ... .-.-.- .. - ... .... --- ..- .-.. -.. -. .----. - .... .- .--. .--. . -."
+  "Glitch": ".-- .... .- - ..--.. -. --- --..-- .. - .----. ... .-. .. -.. .. -.-. ..- .-.. --- ..- ... .-.-.- .. - ... .... --- ..- .-.. -.. -. .----. - .... .- .--. .--. . -.",
+  "EQUINOX": "The force that exists between [Positive] and [Negative]. Something that is made up of the concept itself. All that is known about this substance is that it is simply between [Positive] and [Negative], and nothing else."
 }

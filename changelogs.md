@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.6.1
+### New auras
+- Added Honey, Watt, Warlock, and EQUINOX
+
 # Sol's RNG Bot v3.6.0
 ## Hotfix
 - Fixed an issue that prevented Glitched biome (and maybe other biomes I honestly don't know) from having an effect when a potion was active for the user
