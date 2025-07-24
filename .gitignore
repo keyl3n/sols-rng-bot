@@ -3,6 +3,7 @@ backups/
 .vs/
 .vscode/
 userdata/*
+!.gitkeep
 oldAurasCollection.txt
 auras.json.old
 lbBlacklist.json
