@@ -42,6 +42,7 @@ const dreamspaceAuras = JSON.parse(fs.readFileSync('./auras/dreamspaceAuras.json
 const glitchedAuras = JSON.parse(fs.readFileSync('./auras/glitchedAuras.json'));
 const pumpkinMoonAuras = JSON.parse(fs.readFileSync('./auras/pumpkinMoonAuras.json'));
 const graveyardAuras = JSON.parse(fs.readFileSync('./auras/graveyardAuras.json'));
+const scoobertAuras = JSON.parse(fs.readFileSync('./auras/scoobertAuras.json'));
 
 const combinedAuras = [
   ...auras,
@@ -49,7 +50,8 @@ const combinedAuras = [
   ...dreamspaceAuras,
   ...glitchedAuras,
   ...pumpkinMoonAuras,
-  ...graveyardAuras
+  ...graveyardAuras,
+  ...scoobertAuras
 ];
 
 let auraDescriptions = {};
@@ -368,7 +370,7 @@ function getUserAuraSummary(userId) {
   }
 
   const auraWeights = Object.fromEntries(
-    [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => [a.name, a.chanceIn])
+    [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => [a.name, a.chanceIn])
   );
 
   const sorted = Object.entries(userAuras)
@@ -843,6 +845,52 @@ async function roll(interaction, isButton = false, couldntDisable) {
         }))
       ]
     }
+  } else if (currentBiome.name === 'Scoobert') {
+    if (usingBigPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...scoobertAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99000);
+      activeBigHevUsers.delete(interaction.user.id); // consume
+    } else if (usingMiniPotion) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...scoobertAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 9999);
+      activeMiniHevUsers.delete(interaction.user.id); // consume
+    } else if (usingGurtsHatred) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...scoobertAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 999990);
+      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...scoobertAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 99999998);
+      activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
+    } else {
+      auraPool = [
+        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...scoobertAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ]
+    }
   } else {
     if (usingBigPotion) {
       auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 99990);
@@ -1303,7 +1351,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     const auraWeights = Object.fromEntries(
-      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => [a.name, a.chanceIn])
+      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => [a.name, a.chanceIn])
     );
 
     const sortedAuras = Object.entries(userAuras)
@@ -1467,7 +1515,7 @@ client.on('interactionCreate', async interaction => {
         });
       }
 
-      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras];
+      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras];
       const the_aura = allAuras.find(a => a.name.toLowerCase() === name.toLowerCase());
 
       if (!the_aura) {
@@ -1588,6 +1636,14 @@ client.on('interactionCreate', async interaction => {
         auraPool = [
           ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
           ...dreamspaceAuras.map(a => ({
+            name: a.name,
+            weight: 1 / a.chanceIn
+          }))
+        ];
+      } else if (currentBiome.name === 'Scoobert') {
+        auraPool = [
+          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+          ...scoobertAuras.map(a => ({
             name: a.name,
             weight: 1 / a.chanceIn
           }))
@@ -1719,7 +1775,7 @@ client.on('interactionCreate', async interaction => {
 
       if (!userData[userId]) userData[userId] = {};
 
-      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras];
+      const allAuras = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras];
       let added = 0;
 
       for (const aura of allAuras) {
@@ -1863,6 +1919,14 @@ client.on('interactionCreate', async interaction => {
         auraPool = [
           ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
           ...dreamspaceAuras.map(a => ({
+            name: a.name,
+            weight: 1 / a.chanceIn
+          }))
+        ];
+      } else if (currentBiome.name === 'Scoobert') {
+        auraPool = [
+          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+          ...scoobertAuras.map(a => ({
             name: a.name,
             weight: 1 / a.chanceIn
           }))
@@ -2108,7 +2172,7 @@ client.on('interactionCreate', async interaction => {
     }
     const auraCount = userAuras[ownedAura];
 
-    const aura = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].find(a => a.name.toLowerCase() === ownedAura.toLowerCase());
+    const aura = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].find(a => a.name.toLowerCase() === ownedAura.toLowerCase());
     if (!aura) {
       return interaction.reply({
         content: '<:no:1390740593306632394> That aura does not exist.',
@@ -2153,6 +2217,9 @@ client.on('interactionCreate', async interaction => {
     if (dreamspaceAuras.some(a => a.name === aura.name)) {
       conditionLabel = "Required Conditions";
       conditionValue = "During Dreamspace";
+    } else if (scoobertAuras.some(a => a.name === aura.name)) {
+      conditionLabel = "Required Conditions";
+      conditionValue = "During Scoobert";
     } else if (pumpkinMoonAuras.some(a => a.name === aura.name)) {
       conditionLabel = "Required Conditions";
       conditionValue = "During Pumpkin Moon";
@@ -2287,7 +2354,7 @@ client.on('interactionCreate', async interaction => {
 
     // DEV > FORCEROLL > AURA NAMES
     if (command === 'dev' && sub === 'forceroll') {
-      const choices = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => a.name);
+      const choices = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => a.name);
       const filtered = choices.filter(choice =>
         choice.toLowerCase().includes(focused.toLowerCase())
       ).slice(0, 25);
@@ -2325,7 +2392,7 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === 'aurainfo') {
       const focused = interaction.options.getFocused();
       const userAuras = userData[interaction.user.id] || {};
-      const allAuraNames = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => a.name);
+      const allAuraNames = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => a.name);
       const filtered = allAuraNames
         .filter(name => name.toLowerCase().includes(focused.toLowerCase()))
         .slice(0, 25);
@@ -2454,7 +2521,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
     const userAuras = userData[userId];
     const auraWeights = Object.fromEntries(
-      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras].map(a => [a.name, a.chanceIn])
+      [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => [a.name, a.chanceIn])
     );
     const sortedAuras = Object.entries(userAuras)
       .sort((a, b) => (auraWeights[b[0]] || 0) - (auraWeights[a[0]] || 0));

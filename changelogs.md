@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.6.2
+### New Scoobert aura
+- **Scoob**, 1 in 12
+
 ## Sol's RNG Bot v3.6.1
 ### New auras
 - Added Honey, Watt, Warlock, and EQUINOX

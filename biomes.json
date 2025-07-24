@@ -8,7 +8,7 @@
     { "name": "Starfall", "chance": 7500, "duration": 600 },
     { "name": "Corruption", "chance": 9000, "duration": 660 },
     { "name": "Null", "chance": 10100, "duration": 99 },
-    { "name": "Scoobert", "chance": 9999999999, "duration": 2 },
+    { "name": "Scoobert", "chance": 9999999999, "duration": 180 },
     { "name": "Pumpkin Moon", "chance": 9999999999, "duration": 180 },
     { "name": "Graveyard", "chance": 9999999999, "duration": 180 },
     { "name": "Glitched", "chance": 5000, "duration": 164 },
