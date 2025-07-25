@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.6.3
+### New dev command: `/dev setrolls`
+- Allows you to change your roll count
+
 ## Sol's RNG Bot v3.6.2
 ### New Scoobert aura
 - **Scoob**, 1 in 12

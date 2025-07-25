@@ -475,7 +475,16 @@ const commands = [
     )
     .addSubcommand(sub =>
       sub.setName('wipe')
-        .setDescription('Wipe your data (rolls, inventory, auras)')
+        .setDescription('Wipe your data (rolls, inventory, auras) (developer only)')
+    )
+    .addSubcommand(sub =>
+      sub.setName('setrolls')
+        .setDescription('Change your roll count (developer only)')
+        .addIntegerOption(option =>
+          option.setName('amount')
+            .setDescription('The number to set your roll count to')
+            .setRequired(true)
+        )
     )
     .addSubcommand(sub =>
       sub.setName('createaura')
@@ -1012,7 +1021,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
 
   const rewardEmbed = new EmbedBuilder()
     .setColor(null)
-    .setDescription(`🎁 You earned a free item for reaching **${totalRolls} rolls!**`)
+    .setDescription(`🎁 You earned a free item for reaching **${totalRolls.toLocaleString()} rolls!**`)
 
   const againButton = new ButtonBuilder()
     .setCustomId('again')
@@ -1632,6 +1641,30 @@ client.on('interactionCreate', async interaction => {
       const embed = new EmbedBuilder()
         .setTitle('🧹 Data Wiped')
         .setDescription('Your roll count, aura collection, and inventory have been reset.')
+        .setColor(0xff4444);
+
+      try {
+        await interaction.reply({ embeds: [embed], ephemeral: true });
+      } catch (err) {
+        if (err.code === 10062) {
+          console.warn("⚠️ Interaction expired before reply could be sent.");
+        } else {
+          console.error("❌ Failed to reply to interaction:", err);
+        }
+      }
+    }
+    if (subcommand === 'setrolls') {
+      const userId = interaction.user.id;
+      const desiredAmnt = interaction.options.getInteger('amount')
+      if (userId != config.adminId) return;
+
+      auraCounts[userId] = desiredAmnt;
+
+      console.log(`${chalk.bgYellowBright.black('!')} Roll count for ${userId} set to ${desiredAmnt.toLocaleString()}`);
+
+      const embed = new EmbedBuilder()
+        .setTitle('Roll count set')
+        .setDescription(`Your roll count has been set to \`${desiredAmnt.toLocaleString()}\``)
         .setColor(0xff4444);
 
       try {
