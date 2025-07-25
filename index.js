@@ -383,7 +383,7 @@ function getUserAuraSummary(userId) {
 
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
-  new SlashCommandBuilder().setName('gurt').setDescription('Gurt!'),
+  new SlashCommandBuilder().setName('scoobert').setDescription('Scoobert'),
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
   new SlashCommandBuilder().setName('collection').setDescription(`Shows the auras you've rolled.`),
@@ -1222,11 +1222,30 @@ client.on('interactionCreate', async interaction => {
     }
   }
 
-  if (interaction.commandName === 'gurt') {
-    await interaction.reply('No.')
-    await interaction.user.send("I'll find you. I'll find you if it's the last thing I do.")
+  if (interaction.commandName === 'scoobert') {
+    try {
+      await interaction.deferReply();
+      const possibleScoobs = [
+        'https://cdn.discordapp.com/attachments/1238152687581794354/1398138937792532490/scoobert-ezgif.com-optimize.gif?ex=688445da&is=6882f45a&hm=6acb7787708b356dabcf230222ec415ecbb61357f82e5f151aaab8f36e569037&',
+        'https://i.pinimg.com/736x/dc/77/00/dc77009123053acb6906ff4e3873fc10.jpg',
+        `https://i.redd.it/irdbtjx0tghb1.jpg`,
+        `https://i.pinimg.com/736x/9a/8d/d0/9a8dd04a2e8847fd1251a8233b81d563.jpg`,
+        `https://tenor.com/view/scoobert-gif-9777757588293639053`,
+        `https://tenor.com/view/scoobert-dog-groomed-groomer-aura-gif-15391889001740434313`,
+        `https://tenor.com/view/scoobert-gif-15500868703846171335`,
+        `https://tenor.com/view/scoobert-dog-meme-human-mouth-gif-27485081`
+      ]
+      const selectedScoob = Math.floor(Math.random() * possibleScoobs.length);
+      console.log('I just Scoobed (' + selectedScoob + ')')
+      await interaction.editReply(possibleScoobs[selectedScoob])
+    } catch (err) {
+      if (err.code === 10062) {
+        console.warn("⚠️ Interaction expired before reply could be sent.");
+      } else {
+        console.error("❌ Failed to reply to interaction:", err);
+      }
+    }
   }
-
   if (interaction.commandName === 'profile') {
     const count = auraCounts[userId] || 0;
 
