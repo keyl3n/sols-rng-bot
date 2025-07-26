@@ -56,8 +56,6 @@ const combinedAuras = [
 
 let auraDescriptions = {};
 
-const biomeRarityMap = new Map();
-
 for (const aura of biomeAuras) {
   for (const biomeName in aura.biomeRarity) {
     biomeAurasByName[aura.name] = biomeName;
@@ -92,12 +90,12 @@ function reloadAuraPool() {
     auras = JSON.parse(fs.readFileSync('./auras/auras.json', 'utf8'));
 
     // Refresh aurasWithWeights
-    aurasWithWeights = auras
+    let aurasWithWeights = auras
       .filter(a => !a.disabled)
       .map(aura => ({ aura, weight: aura.chance }));
 
     // Refresh biomeAuraList and biomeAurasByName
-    biomeAuraList = auras.filter(a => a.nativeBiome);
+    let biomeAuraList = auras.filter(a => a.nativeBiome);
     biomeAurasByName = {};
     for (const aura of biomeAuraList) {
       biomeAurasByName[aura.name.toLowerCase()] = aura;
@@ -110,24 +108,6 @@ function reloadAuraPool() {
 }
 
 reloadAuraPool();
-
-function getAuraColor(chanceIn) {
-  if (chanceIn < 998) {
-    return null;
-  } else if (chanceIn <= 9998) {
-    return 0xa464e8;
-  } else if (chanceIn <= 99998) {
-    return 0xff8000;
-  } else if (chanceIn <= 999998) {
-    return 0x39ffe8;
-  } else if (chanceIn <= 9999998) {
-    return 0xff73fd;
-  } else if (chanceIn <= 9999999998) {
-    return 0xa7e8e8;
-  } else {
-    return null;
-  }
-}
 
 let leaderboardBlacklist = [];
 if (fs.existsSync(blacklistPath)) {
@@ -363,24 +343,6 @@ function recordAuraRoll(userId, auraCategory) {
   saveUserData();
 }
 
-function getUserAuraSummary(userId) {
-  const userAuras = userData[userId];
-  if (!userAuras || Object.keys(userAuras).length === 0) {
-    return "No auras rolled yet.";
-  }
-
-  const auraWeights = Object.fromEntries(
-    [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => [a.name, a.chanceIn])
-  );
-
-  const sorted = Object.entries(userAuras)
-    .sort((a, b) => (auraWeights[b[0]] || 0) - (auraWeights[a[0]] || 0));
-
-  return sorted
-    .map(([aura, count]) => `${aura} (x${count})`)
-    .join('\n');
-}
-
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
   new SlashCommandBuilder().setName('scoobert').setDescription('Scoobert'),
@@ -601,19 +563,6 @@ function buildAuraPool(biomeName, isDaytime) {
     return { name: aura.name, weight };
   });
 }
-
-// Preprocessing step: build cumulative weights
-function buildCumulative(auras) {
-  let total = 0;
-  return auras.map(aura => {
-    total += aura.weight;
-    return { ...aura, cumulative: total };
-  });
-}
-
-const auraValues = Object.fromEntries(
-  auras.map(aura => [aura.name, aura.chanceIn])
-);
 
 async function roll(interaction, isButton = false, couldntDisable) {
   // let rollPool = buildAuraPool(currentBiome.name, currentBiome.isDaytime);
@@ -1922,76 +1871,6 @@ client.on('interactionCreate', async interaction => {
           }
         }
       }
-    } else if (subcommand === 'multiroll') {
-      await interaction.deferReply({ ephemeral: true });
-      const amount = interaction.options.getInteger('amount') ?? 10;
-      const resultMap = new Map();
-
-      let auraPool;
-      if (currentBiome.name === 'Dreamspace') {
-        auraPool = [
-          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-          ...dreamspaceAuras.map(a => ({
-            name: a.name,
-            weight: 1 / a.chanceIn
-          }))
-        ];
-      } else if (currentBiome.name === 'Scoobert') {
-        auraPool = [
-          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-          ...scoobertAuras.map(a => ({
-            name: a.name,
-            weight: 1 / a.chanceIn
-          }))
-        ];
-      } else if (currentBiome.name === 'Pumpkin Moon') {
-        auraPool = [
-          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-          ...pumpkinMoonAuras.map(a => ({
-            name: a.name,
-            weight: 1 / a.chanceIn
-          }))
-        ];
-      } else if (currentBiome.name === 'Graveyard') {
-        auraPool = [
-          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-          ...graveyardAuras.map(a => ({
-            name: a.name,
-            weight: 1 / a.chanceIn
-          }))
-        ];
-      } else if (currentBiome.name === 'Glitched') {
-        auraPool = [
-          ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-          ...glitchedAuras.map(a => ({
-            name: a.name,
-            weight: 1 / a.chanceIn
-          }))
-        ];
-      } else {
-        auraPool = buildAuraPool(currentBiome.name, currentBiome.isDaytime);
-      }
-
-      for (let i = 0; i < amount; i++) {
-        const aura = getRandomAura(auraPool);
-        if (!resultMap.has(aura.name)) {
-          resultMap.set(aura.name, { count: 1, chanceIn: Math.round(1 / aura.weight) });
-        } else {
-          resultMap.get(aura.name).count++;
-        }
-      }
-
-      const output = [...resultMap.entries()]
-        .sort((a, b) => b[1].count - a[1].count)
-        .map(([name, { count, chanceIn }]) => `**${name}** × ${count} (1 in ${chanceIn})`)
-        .join("\n") || "No results.";
-
-      const embed = new EmbedBuilder()
-        .setTitle("📎 Multi-Roll (Test) — Results")
-        .setDescription(output)
-        .setColor(0x5f27cd);
-
-      await interaction.editReply({ embeds: [embed] });
     } else if (subcommand === 'createaura') {
       const auraName = interaction.options.getString('name');
       const chanceIn = interaction.options.getInteger('rarity');
