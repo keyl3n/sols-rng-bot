@@ -350,6 +350,7 @@ const commands = [
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
   new SlashCommandBuilder().setName('collection').setDescription(`Shows the auras you've rolled.`),
   new SlashCommandBuilder().setName('inventory').setDescription("Check what's in your item inventory."),
+  new SlashCommandBuilder().setName('nextreward').setDescription("See when you get your next potion reward from rolling."),
   new SlashCommandBuilder().setName('dev').setDescription('Developer tools')
     .addSubcommand(sub =>
       sub.setName('forceroll')
@@ -627,7 +628,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
@@ -645,7 +646,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
@@ -663,7 +664,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
@@ -681,7 +682,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
@@ -699,7 +700,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Object.values(a.biomeRarity)[0];
+            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
@@ -1165,6 +1166,7 @@ client.on('interactionCreate', async interaction => {
       }
     }
   }
+
   if (interaction.commandName === 'profile') {
     const count = auraCounts[userId] || 0;
 
@@ -1371,6 +1373,36 @@ client.on('interactionCreate', async interaction => {
         console.error("❌ Failed to reply to interaction:", err);
       }
     }
+  }
+
+  if (interaction.commandName === 'nextreward') {
+    const userId     = interaction.user.id;
+    const totalRolls = auraCounts[userId] || 0;   // your stored roll count
+  
+    // calculate up‑to‑date rolls‑until for each tier
+    const tiers = [
+      { interval:  1750, name: 'Mini Heavenly Potion' },
+      { interval:  17500, name: 'BIG Heavenly Potion' },
+      { interval: 100000, name: "Gurt's Hatred" },
+    ];
+  
+    // build a response embed
+    const { EmbedBuilder } = require('discord.js');
+    const embed = new EmbedBuilder()
+      .setTitle('Rolls until next reward')
+      .setColor(null);
+  
+    for (const t of tiers) {
+      const rem = totalRolls % t.interval;
+      const needed = rem === 0 ? t.interval : t.interval - rem;
+      embed.addFields({
+        name: `${t.name}`,
+        value: `${needed.toLocaleString()} rolls`,
+        inline: true
+      });
+    }
+  
+    await interaction.reply({ embeds: [embed] });
   }
 
   if (interaction.commandName === 'lb') {
