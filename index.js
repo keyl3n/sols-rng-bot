@@ -918,45 +918,6 @@ async function roll(interaction, isButton = false, couldntDisable) {
     }
   }
 
-  /*
-  if (usingBigPotion) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 99000);
-    activeBigHevUsers.delete(interaction.user.id); // Consume BIG potion
-  } else if (usingMiniPotion) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 9999);
-    activeMiniHevUsers.delete(interaction.user.id); // Consume MINI potion
-  } else if (usingDevPotionOfDoom) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 99999998);
-    activeDevPotionOfDoomUsers.delete(interaction.user.id); // Consume DEV potion OF DOOM!!!
-  } else if (usingGurtsHatred) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 999999);
-    activeGurtsHatredUsers.delete(interaction.user.id); // Consume GURT'S HATRED
-  }
-  if (!auras || auras.length === 0) {
-    throw new Error("No auras available to roll from.");
-  }
-
-  // Final adjustments to auraPool before rolling
-  if (activeMiniHevUsers.has(interaction.user.id)) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 9999);
-    activeMiniHevUsers.delete(interaction.user.id);
-  }
-
-  if (activeBigHevUsers.has(interaction.user.id)) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 99000);
-    activeBigHevUsers.delete(interaction.user.id);
-  }
-
-  if (activeDevPotionOfDoomUsers.has(interaction.user.id)) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 99999998);
-    activeDevPotionOfDoomUsers.delete(interaction.user.id);
-  }
-
-  if (activeGurtsHatredUsers.has(interaction.user.id)) {
-    auraPool = auraPool.filter(a => 1 / a.weight >= 999999);
-    activeGurtsHatredUsers.delete(interaction.user.id);
-  } */
-
   const the_aura = getRandomAura(auraPool);
 
   // calculate coins from aura rarity
@@ -2443,13 +2404,15 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === 'aurainfo') {
       const focused = interaction.options.getFocused();
-      const userAuras = userData[interaction.user.id] || {};
-      const allAuraNames = [...auras, ...biomeAuras, ...dreamspaceAuras, ...glitchedAuras, ...pumpkinMoonAuras, ...graveyardAuras, ...scoobertAuras].map(a => a.name);
-      const filtered = allAuraNames
+      const userAuraInventory = userData[interaction.user.id] || {};
+    
+      const ownedAuraNames = Object.keys(userAuraInventory)
         .filter(name => name.toLowerCase().includes(focused.toLowerCase()))
         .slice(0, 25);
-
-      return interaction.respond(filtered.map(name => ({ name, value: name })));
+    
+      return interaction.respond(
+        ownedAuraNames.map(name => ({ name, value: name }))
+      );
     }
 
     if (interaction.commandName === 'dev' && sub === 'deleteaura') {
