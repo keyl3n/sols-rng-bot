@@ -230,7 +230,7 @@ function sendBiomeLog(biome, guildId) {
       title: `Biome Started`,
       description: description,
       thumbnail: thumb ? { url: thumb } : undefined,
-      color: 0x00bfff,
+      color: null,
       timestamp: new Date().toISOString()
     }]
   };
@@ -1376,6 +1376,7 @@ client.on('interactionCreate', async interaction => {
   }
 
   if (interaction.commandName === 'nextreward') {
+    await interaction.deferReply()
     const userId     = interaction.user.id;
     const totalRolls = auraCounts[userId] || 0;   // your stored roll count
   
@@ -1387,7 +1388,6 @@ client.on('interactionCreate', async interaction => {
     ];
   
     // build a response embed
-    const { EmbedBuilder } = require('discord.js');
     const embed = new EmbedBuilder()
       .setTitle('Rolls until next reward')
       .setColor(null);
@@ -1402,7 +1402,7 @@ client.on('interactionCreate', async interaction => {
       });
     }
   
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
 
   if (interaction.commandName === 'lb') {

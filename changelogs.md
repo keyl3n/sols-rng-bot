@@ -1,3 +1,9 @@
+## Sol's RNG Bot v3.6.4
+### Embed tweak
+- BiomeLogs embeds no longer have a blue stripe on them
+### Update to `/nextreward`
+- The command now uses `interaction.deferReply()` before calculating everything
+
 ## Sol's RNG Bot v3.6.3
 ### New dev command: `/dev setrolls`
 - Allows you to change your roll count
