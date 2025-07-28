@@ -24,6 +24,10 @@
     "chanceIn": 32
   },
   {
+    "name": "Divinus : Angel",
+    "chanceIn": 120000
+  },
+  {
     "name": "Crystallized",
     "chanceIn": 64
   },
@@ -58,6 +62,10 @@
   {
     "name": "Precious",
     "chanceIn": 1024
+  },
+  {
+    "name": "Atomic",
+    "chanceIn": 1180
   },
   {
     "name": "Glock",
@@ -108,28 +116,16 @@
     "chanceIn": 16384
   },
   {
+    "name": "Copper",
+    "chanceIn": 29000
+  },
+  {
     "name": "WATT",
     "chanceIn": 32768
   },
   {
     "name": "Aquatic",
     "chanceIn": 40000
-  },
-  {
-    "name": "Lunar",
-    "chanceIn": 50000
-  },
-  {
-    "name": "Lunar : Full Moon",
-    "chanceIn": 500000
-  },
-  {
-    "name": "Solar",
-    "chanceIn": 50000
-  },
-  {
-    "name": "Solar : Solstice",
-    "chanceIn": 500000
   },
   {
     "name": "Nautilus",
@@ -302,6 +298,10 @@
   {
     "name": "Overture : History",
     "chanceIn": 300000000
+  },
+  {
+    "name": "LOTUSFALL",
+    "chanceIn": 320000000
   },
   {
     "name": "Jazz : Orchestra",

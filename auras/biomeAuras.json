@@ -161,6 +161,13 @@
     }
   },
   {
+    "name": "Parasite",
+    "chanceIn": 3000000,
+    "biomeRarity": {
+      "Corruption": 600000
+    }
+  },
+  {
     "name": "Galaxy",
     "chanceIn": 5000000,
     "biomeRarity": {
@@ -284,6 +291,13 @@
     "chanceIn": 6000000,
     "biomeRarity": {
       "Nighttime": 600000
+    }
+  },
+  {
+    "name": "Lullaby",
+    "chanceIn": 17000000,
+    "biomeRarity": {
+      "Nighttime": 1700000
     }
   },
   {

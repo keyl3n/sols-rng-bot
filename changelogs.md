@@ -1,3 +1,15 @@
+# Sol's RNG Bot v3.8.0
+## New auras
+- Added Atomic, COPPER, Divinus : Angel, Parasite, Lullaby, LOTUSFALL, and DREAMMETRIC
+## Bugfix
+- Fixed Solar, Lunar, and their mutations (excluding Nightfall) from being both normal auras and biome auras  
+-# To put it more technically, they were in both `auras.json` and `biomeAuras.json` for some reason.
+
+# Sol's RNG Bot v3.7.0
+## Change to biomes
+- **Pumpkin Moon** and **Graveyard** can now spawn naturally  
+-# NOTE: Apostolos : Veil is only available in **Pumpkin Moon** right now. I will eventually fix this.
+
 ## Sol's RNG Bot v3.6.4
 ### Embed tweak
 - BiomeLogs embeds no longer have a blue stripe on them
