@@ -6,7 +6,6 @@ If you'd like, you can add it to a server [here](https://discord.com/oauth2/auth
 There are some things I want to note about this bot:  
 1. Right now, there is an issue where the /dev createaura and /dev deleteaura commands do not apply until the bot is restarted. I will fix this eventually (i'm lazy)
 2. This bot uses application emojis that I'm not sure will work if you're using a different clientId. If they don't show up properly, replace them yourself or just use the normal ✅, ⚠️, and ❌ emojis if you'd like.
-3. This bot has the Halloween 2024 biomes spawn like any other biome in the game. If you'd like to disable them, go to `biomes.json` and set their `chance` value to `9999999999`.
 
 made by .keylen (686748689988976721) on Discord  
 @Techno_Paper on Roblox

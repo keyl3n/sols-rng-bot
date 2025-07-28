@@ -1075,8 +1075,59 @@ client.on('ready', async () => {
 
       if (now >= currentBiome.nextDayNightSwitch) {
         currentBiome.isDaytime = !currentBiome.isDaytime;
+        if (!currentBiome.isDaytime) {
+          // It's now night
+          const canOverride = !currentBiome.disallowEventBiomeOverride;
+          if (canOverride) {
+            const roll = Math.floor(Math.random() * 5); // 1 in 5
+            if (roll === 0) {
+              const pick = Math.random() < 0.5 ? 'Pumpkin Moon' : 'Graveyard';
+              const eventBiome = biomes.find(b => b.name === pick);
+              previousBiome = { ...currentBiome };
+              for (const guild of client.guilds.cache.values()) {
+                startBiome(eventBiome, guild.id);
+              }
+              console.log(`🌕 Night event biome activated: ${pick}`);
+            }
+          }
+        } else {
+          // It's now day, revert to normal if we were in an event biome
+          if (currentBiome.isEventBiome) {
+            const normal = biomes.find(b => b.name === 'Normal');
+            for (const guild of client.guilds.cache.values()) {
+              startBiome(normal, guild.id);
+            }
+            console.log('☀️ Night event biome ended, reverted to Normal');
+          }
+        }
         currentBiome.nextDayNightSwitch = now + 2 * 60 * 1000;
-        console.log(`🌗 Switched to ${currentBiome.isDaytime ? 'day' : 'night'}`);
+      
+        const switchingTo = currentBiome.isDaytime ? 'day' : 'night';
+        console.log(`🌗 Switched to ${switchingTo}`);
+      
+        if (currentBiome.isDaytime) {
+          // If it's now day and we're in a special night-only biome, revert to Normal
+          if (['Pumpkin Moon', 'Graveyard'].includes(currentBiome.name)) {
+            for (const guild of client.guilds.cache.values()) {
+              startBiome({ name: 'Normal', duration: 0 }, guild.id);
+            }
+            console.log(`🌍 Biome reverted to Normal (end of night)`);
+          }
+        } else {
+          // It just became night — roll 1 in 5 chance for a special night biome
+          if (Math.floor(Math.random() * 5) === 0) {
+            const nightBiomes = ['Pumpkin Moon', 'Graveyard'];
+            const selectedName = nightBiomes[Math.floor(Math.random() * nightBiomes.length)];
+            const selectedBiome = biomes.find(b => b.name === selectedName);
+            if (selectedBiome) {
+              for (const guild of client.guilds.cache.values()) {
+                startBiome(selectedBiome, guild.id);
+              }
+              console.log(`🌕 Night biome started: ${selectedName}`);
+            }
+          }
+        }
+      
         saveBiomeState();
       }
 
