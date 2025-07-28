@@ -1031,18 +1031,21 @@ client.on('ready', async () => {
       console.error(chalk.redBright(`${chalk.bgRedBright.white('ERROR')} Failed to register in guild ${guild.name} (${guild.id}):`), err);
     }
   }
+  
   // Start the biome logic loop (runs every 1 second)
   setInterval(() => {
     try {
       const now = Date.now();
-
+  
+      // Check if current biome has expired
       if (currentBiome.name !== 'Normal' && currentBiome.endsAt && now >= currentBiome.endsAt) {
         for (const guild of client.guilds.cache.values()) {
           startBiome({ name: 'Normal', duration: 0 }, guild.id);
         }
         console.log(`🌍 Biome switched to Normal`);
       }
-
+  
+      // Rare roll for Dreamspace
       if (Math.floor(Math.random() * 300_000) === 0) {
         const dream = biomes.find(b => b.name === 'Dreamspace');
         for (const guild of client.guilds.cache.values()) {
@@ -1051,86 +1054,63 @@ client.on('ready', async () => {
         console.log(`🌍 Biome switched to Dreamspace`);
         return;
       }
-
+  
+      // Attempt to start a biome (only if Normal)
       if (currentBiome.name === 'Normal') {
         for (const biome of biomes) {
           if (["Normal", "Glitched", "Dreamspace"].includes(biome.name)) continue;
           if (Math.floor(Math.random() * biome.chance) === 0) {
-            // We selected biome; now roll for Glitched
             let finalBiome = biome;
-            const glitchedBiome = biomes.find(b => b.name === 'Glitched');
-            if (glitchedBiome && Math.floor(Math.random() * glitchedBiome.chance) === 0) {
-              finalBiome = biomes.find(b => b.name === 'Glitched');
+            const glitched = biomes.find(b => b.name === 'Glitched');
+            if (glitched && Math.floor(Math.random() * glitched.chance) === 0) {
+              finalBiome = glitched;
             }
-
+  
             previousBiome = { ...currentBiome };
-            console.log(`🌍 Biome switched to ${finalBiome.name}`);
             for (const guild of client.guilds.cache.values()) {
               startBiome(finalBiome, guild.id);
             }
+            console.log(`🌍 Biome switched to ${finalBiome.name}`);
             return;
           }
         }
       }
-
+  
+      // Handle day/night transition
       if (now >= currentBiome.nextDayNightSwitch) {
         currentBiome.isDaytime = !currentBiome.isDaytime;
-        if (!currentBiome.isDaytime) {
-          // It's now night
+        currentBiome.nextDayNightSwitch = now + 2 * 60 * 1000;
+  
+        const switchingTo = currentBiome.isDaytime ? 'day' : 'night';
+        console.log(`🌗 Switched to ${switchingTo}`);
+  
+        if (currentBiome.isDaytime) {
+          // If ending an event biome, return to normal
+          if (currentBiome.isEventBiome) {
+            for (const guild of client.guilds.cache.values()) {
+              startBiome({ name: 'Normal', duration: 0 }, guild.id);
+            }
+            console.log('☀️ Night event biome ended, reverted to Normal');
+          }
+        } else {
+          // At start of night, try to activate a night-only event biome
           const canOverride = !currentBiome.disallowEventBiomeOverride;
-          if (canOverride) {
-            const roll = Math.floor(Math.random() * 5); // 1 in 5
-            if (roll === 0) {
-              const pick = Math.random() < 0.5 ? 'Pumpkin Moon' : 'Graveyard';
-              const eventBiome = biomes.find(b => b.name === pick);
+          if (canOverride && Math.floor(Math.random() * 5) === 0) {
+            const nightBiomes = ['Pumpkin Moon', 'Graveyard'];
+            const pick = nightBiomes[Math.floor(Math.random() * nightBiomes.length)];
+            const nightBiome = biomes.find(b => b.name === pick);
+            if (nightBiome) {
               previousBiome = { ...currentBiome };
               for (const guild of client.guilds.cache.values()) {
-                startBiome(eventBiome, guild.id);
+                startBiome(nightBiome, guild.id);
               }
               console.log(`🌕 Night event biome activated: ${pick}`);
             }
           }
-        } else {
-          // It's now day, revert to normal if we were in an event biome
-          if (currentBiome.isEventBiome) {
-            const normal = biomes.find(b => b.name === 'Normal');
-            for (const guild of client.guilds.cache.values()) {
-              startBiome(normal, guild.id);
-            }
-            console.log('☀️ Night event biome ended, reverted to Normal');
-          }
         }
-        currentBiome.nextDayNightSwitch = now + 2 * 60 * 1000;
-      
-        const switchingTo = currentBiome.isDaytime ? 'day' : 'night';
-        console.log(`🌗 Switched to ${switchingTo}`);
-      
-        if (currentBiome.isDaytime) {
-          // If it's now day and we're in a special night-only biome, revert to Normal
-          if (['Pumpkin Moon', 'Graveyard'].includes(currentBiome.name)) {
-            for (const guild of client.guilds.cache.values()) {
-              startBiome({ name: 'Normal', duration: 0 }, guild.id);
-            }
-            console.log(`🌍 Biome reverted to Normal (end of night)`);
-          }
-        } else {
-          // It just became night — roll 1 in 5 chance for a special night biome
-          if (Math.floor(Math.random() * 5) === 0) {
-            const nightBiomes = ['Pumpkin Moon', 'Graveyard'];
-            const selectedName = nightBiomes[Math.floor(Math.random() * nightBiomes.length)];
-            const selectedBiome = biomes.find(b => b.name === selectedName);
-            if (selectedBiome) {
-              for (const guild of client.guilds.cache.values()) {
-                startBiome(selectedBiome, guild.id);
-              }
-              console.log(`🌕 Night biome started: ${selectedName}`);
-            }
-          }
-        }
-      
+  
         saveBiomeState();
       }
-
     } catch (err) {
       console.error(chalk.redBright(`${chalk.bgRedBright.white('ERROR')} Biome loop error:`), err);
     }

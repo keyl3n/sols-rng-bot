@@ -1,5 +1,9 @@
+## Sol's RNG Bot v3.8.1b
+### Bugfix
+- Removed some redundant code and allat
+
 ## Sol's RNG Bot v3.8.1a
-## Changes to biomes
+### Changes to biomes
 - **Pumpkin Moon** and **Graveyard** now work like how they did in the game, but the biome now returns to the previous one once it ends.  
 -# I don't entirely know if this system works, so I am fully prepared to fix a lot of bugs soon (hence the `a` in the version number)
 
