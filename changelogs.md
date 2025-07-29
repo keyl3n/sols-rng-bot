@@ -170,7 +170,7 @@ Other biome chances: `Unchanged`
 
 ## Sol's RNG Bot v3.1.1
 ### Balance Changes
-Glitched Biome Rarity: `1 in 30,000` -> `1 in 15,000` (per biome change)
+Glitched Biome Rarity: `1 in 30,000` -> `1 in 15,000` (per biome change)  
 Dreamspace Biome Rarity: `1 in 5,000,000` -> `1 in 3,000,000` (per second)
 
 # Sol's RNG Bot v3.0.0
