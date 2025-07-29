@@ -1031,7 +1031,7 @@ client.on('ready', async () => {
       console.error(chalk.redBright(`${chalk.bgRedBright.white('ERROR')} Failed to register in guild ${guild.name} (${guild.id}):`), err);
     }
   }
-  
+
   // Start the biome logic loop (runs every 1 second)
   setInterval(() => {
     try {
@@ -1095,7 +1095,7 @@ client.on('ready', async () => {
         } else {
           // At start of night, try to activate a night-only event biome
           const canOverride = !currentBiome.disallowEventBiomeOverride;
-          if (canOverride && Math.floor(Math.random() * 5) === 0) {
+          if (canOverride && Math.floor(Math.random() * 15 /* <-- 1 in 15 */ ) === 0) {
             const nightBiomes = ['Pumpkin Moon', 'Graveyard'];
             const pick = nightBiomes[Math.floor(Math.random() * nightBiomes.length)];
             const nightBiome = biomes.find(b => b.name === pick);
