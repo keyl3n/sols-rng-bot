@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.8.2
+### Even more tweaks
+- Made Halloween biomes 1 in 25 every night to make biome overrides less common
+
 ## Sol's RNG Bot v3.8.1c
 ### Final tweaks
 - Halloween biomes are now 1 in 15 per night and last 2 minutes

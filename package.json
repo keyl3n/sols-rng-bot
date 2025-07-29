@@ -1,6 +1,6 @@
 {
   "name": "sols-rng-bot",
-  "version": "3.8.1b",
+  "version": "3.8.2",
   "description": "",
   "main": "index.js",
   "scripts": {
