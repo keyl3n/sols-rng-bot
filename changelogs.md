@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.8.3
+### Updated biome update embed
+- It looks cooler now
+
 ## Sol's RNG Bot v3.8.2
 ### Even more tweaks
 - Made Halloween biomes 1 in 25 every night to make biome overrides less common

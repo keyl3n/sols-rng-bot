@@ -79,6 +79,23 @@ const biomeThumbnails = {
   "Dreamspace": "https://keylens-website.web.app/biomes/DREAMSPACE.png"
 };
 
+const biomeColors = {
+  "Normal": null,
+  "Windy": 0x91F7FF,
+  "Snowy": 0xC4F5F6,
+  "Rainy": 0x4385FF,
+  "Sand Storm": 0xF4C27C,
+  "Hell": 0x5C1219,
+  "Starfall": 0x6784E0,
+  "Corruption": 0x9042FF,
+  "Null": 0x000000,
+  "Scoobert": 0xba9c7b,
+  "Pumpkin Moon": 0xd55f09,
+  "Graveyard": 0x454545,
+  "Glitched": 0x65FF65,
+  "Dreamspace": 0xff7dff
+}
+
 try {
   auraDescriptions = JSON.parse(fs.readFileSync(auraDescriptionsPath));
 } catch (err) {
@@ -219,7 +236,7 @@ function sendBiomeLog(biome, guildId) {
   const endsAt = currentBiome.endsAt;
   const seconds = endsAt ? Math.max(0, Math.floor((endsAt - Date.now()) / 1000)) : null;
 
-  let description = `# ${displayBiome}`;
+  let description = `> # Biome Started - ${displayBiome}`;
   if (!isNormal && seconds !== null) {
     description += `\n${seconds} seconds remain`;
   }
@@ -227,11 +244,12 @@ function sendBiomeLog(biome, guildId) {
   const payload = {
     content: null,
     embeds: [{
-      title: `Biome Started`,
+      title: getTimestamp(),
       description: description,
       thumbnail: thumb ? { url: thumb } : undefined,
-      color: null,
-      timestamp: new Date().toISOString()
+      color: biomeColors[displayBiome],
+      timestamp: new Date().toISOString(),
+      footer: { text: `Sol's RNG Bot` }
     }]
   };
 
@@ -328,7 +346,6 @@ function recordRoll(userId) {
   return { gotPotion, totalRolls };
 }
 
-
 // When a user rolls:
 function recordAuraRoll(userId, auraCategory) {
   if (!userData[userId]) {
@@ -343,9 +360,20 @@ function recordAuraRoll(userId, auraCategory) {
   saveUserData();
 }
 
+function getTimestamp() {
+  const now = new Date();
+
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  return `[${hours}:${minutes}:${seconds}]`;
+}
+
 const commands = [
   new SlashCommandBuilder().setName('roll').setDescription('Roll an aura!'),
-  new SlashCommandBuilder().setName('scoobert').setDescription('Scoobert'),
+  // new SlashCommandBuilder().setName('giveallauras').setDescription('Give a user EVERYTHING').addUserOption(option => option.setName('user').setDescription('The user to recieve the auras.').setRequired(true)),
+  new SlashCommandBuilder().setName('oatmeal').setDescription('The cat not the food'),
   new SlashCommandBuilder().setName('biome').setDescription('See the current biome and time.'),
   new SlashCommandBuilder().setName('profile').setDescription('Lets you view info about your progress.'),
   new SlashCommandBuilder().setName('collection').setDescription(`Shows the auras you've rolled.`),
@@ -1036,7 +1064,7 @@ client.on('ready', async () => {
   setInterval(() => {
     try {
       const now = Date.now();
-  
+
       // Check if current biome has expired
       if (currentBiome.name !== 'Normal' && currentBiome.endsAt && now >= currentBiome.endsAt) {
         for (const guild of client.guilds.cache.values()) {
@@ -1044,7 +1072,7 @@ client.on('ready', async () => {
         }
         console.log(`🌍 Biome switched to Normal`);
       }
-  
+
       // Rare roll for Dreamspace
       if (Math.floor(Math.random() * 300_000) === 0) {
         const dream = biomes.find(b => b.name === 'Dreamspace');
@@ -1054,7 +1082,7 @@ client.on('ready', async () => {
         console.log(`🌍 Biome switched to Dreamspace`);
         return;
       }
-  
+
       // Attempt to start a biome (only if Normal)
       if (currentBiome.name === 'Normal') {
         for (const biome of biomes) {
@@ -1065,7 +1093,7 @@ client.on('ready', async () => {
             if (glitched && Math.floor(Math.random() * glitched.chance) === 0) {
               finalBiome = glitched;
             }
-  
+
             previousBiome = { ...currentBiome };
             for (const guild of client.guilds.cache.values()) {
               startBiome(finalBiome, guild.id);
@@ -1075,15 +1103,15 @@ client.on('ready', async () => {
           }
         }
       }
-  
+
       // Handle day/night transition
       if (now >= currentBiome.nextDayNightSwitch) {
         currentBiome.isDaytime = !currentBiome.isDaytime;
         currentBiome.nextDayNightSwitch = now + 2 * 60 * 1000;
-  
+
         const switchingTo = currentBiome.isDaytime ? 'day' : 'night';
         console.log(`🌗 Switched to ${switchingTo}`);
-  
+
         if (currentBiome.isDaytime) {
           // If ending an event biome, return to normal
           if (currentBiome.isEventBiome) {
@@ -1108,7 +1136,7 @@ client.on('ready', async () => {
             }
           }
         }
-  
+
         saveBiomeState();
       }
     } catch (err) {
@@ -1173,21 +1201,23 @@ client.on('interactionCreate', async interaction => {
     }
   }
 
-  if (interaction.commandName === 'scoobert') {
+  if (interaction.commandName === 'oatmeal') {
     try {
       await interaction.deferReply();
       const possibleScoobs = [
-        'https://cdn.discordapp.com/attachments/1238152687581794354/1398138937792532490/scoobert-ezgif.com-optimize.gif?ex=688445da&is=6882f45a&hm=6acb7787708b356dabcf230222ec415ecbb61357f82e5f151aaab8f36e569037&',
-        'https://i.pinimg.com/736x/dc/77/00/dc77009123053acb6906ff4e3873fc10.jpg',
-        `https://i.redd.it/irdbtjx0tghb1.jpg`,
-        `https://i.pinimg.com/736x/9a/8d/d0/9a8dd04a2e8847fd1251a8233b81d563.jpg`,
-        `https://tenor.com/view/scoobert-gif-9777757588293639053`,
-        `https://tenor.com/view/scoobert-dog-groomed-groomer-aura-gif-15391889001740434313`,
-        `https://tenor.com/view/scoobert-gif-15500868703846171335`,
-        `https://tenor.com/view/scoobert-dog-meme-human-mouth-gif-27485081`
+        'https://media.discordapp.net/attachments/930932805435797515/1399956841651372042/IMG_2850.jpg?ex=688ae2e8&is=68899168&hm=1368f7eb8d2bdade75963640a8c5753898d64f4f005661117cc96301cc1d53f9&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956842519466004/IMG_2807.jpg?ex=688ae2e9&is=68899169&hm=375e764def08bf9bcdd38ccb2019eccc0efa93e3841e899b383ccfc1c8224581&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956843064987648/IMG_2679.jpg?ex=688ae2e9&is=68899169&hm=915073f7d1e35eaf35e1ce2e7074079ddf9f5e7b9c6e21ed945dc5c3a8830911&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956843564105738/IMG_2616.jpg?ex=688ae2e9&is=68899169&hm=2ded7c0b8f0ce45007abc90abf262e104e3cebbd68110ff87b27a540805e134d&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956844109369487/IMG_2608.jpg?ex=688ae2e9&is=68899169&hm=afb1944c203079a7c8230d80eb4f508e1f07c6ae27f0e25ce13d39b95acfa47d&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956844604162058/IMG_2543.jpg?ex=688ae2e9&is=68899169&hm=dac2edc734ae1d7cecb2d4a8c2885f9d68251dc419bd4ff256b19b45c5d492ff&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956845073928383/IMG_2447.jpg?ex=688ae2e9&is=68899169&hm=d75b0df45e0700229593cc48b9c0b87d7e8e94219a80b0e388f56c742de643e9&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956845577240707/IMG_2443.jpg?ex=688ae2e9&is=68899169&hm=89a7bd01c37768229b1ffc1b716373569aa98124d8746d0c1b0a735ae146efe1&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956846156058654/IMG_2376.jpg?ex=688ae2ea&is=6889916a&hm=e7370a7ea6a7d413b964e968776de4f3e0a06953a5891c1a4182e50b1fbf6352&=&width=642&height=856',
+        'https://media.discordapp.net/attachments/930932805435797515/1399956846634340472/IMG_2334.jpg?ex=688ae2ea&is=6889916a&hm=fb1775e1afe8c9e44b8c015ac0ebc6c7c9f22d19fd4cc2d95b7bb36b74558a6c&=&width=642&height=856'
       ]
       const selectedScoob = Math.floor(Math.random() * possibleScoobs.length);
-      console.log('I just Scoobed (' + selectedScoob + ')')
+      console.log('I just Oatmealed (' + selectedScoob + ')')
       await interaction.editReply(possibleScoobs[selectedScoob])
     } catch (err) {
       if (err.code === 10062) {
@@ -1408,21 +1438,21 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'nextreward') {
     await interaction.deferReply()
-    const userId     = interaction.user.id;
+    const userId = interaction.user.id;
     const totalRolls = auraCounts[userId] || 0;   // your stored roll count
-  
+
     // calculate up‑to‑date rolls‑until for each tier
     const tiers = [
-      { interval:  1750, name: 'Mini Heavenly Potion' },
-      { interval:  17500, name: 'BIG Heavenly Potion' },
+      { interval: 1750, name: 'Mini Heavenly Potion' },
+      { interval: 17500, name: 'BIG Heavenly Potion' },
       { interval: 100000, name: "Gurt's Hatred" },
     ];
-  
+
     // build a response embed
     const embed = new EmbedBuilder()
       .setTitle('Rolls until next reward')
       .setColor(null);
-  
+
     for (const t of tiers) {
       const rem = totalRolls % t.interval;
       const needed = rem === 0 ? t.interval : t.interval - rem;
@@ -1432,7 +1462,7 @@ client.on('interactionCreate', async interaction => {
         inline: true
       });
     }
-  
+
     await interaction.editReply({ embeds: [embed] });
   }
 
@@ -2347,11 +2377,11 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === 'aurainfo') {
       const focused = interaction.options.getFocused();
       const userAuraInventory = userData[interaction.user.id] || {};
-    
+
       const ownedAuraNames = Object.keys(userAuraInventory)
         .filter(name => name.toLowerCase().includes(focused.toLowerCase()))
         .slice(0, 25);
-    
+
       return interaction.respond(
         ownedAuraNames.map(name => ({ name, value: name }))
       );
