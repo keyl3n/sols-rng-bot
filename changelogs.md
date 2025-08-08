@@ -1,3 +1,16 @@
+## Sol's RNG Bot v3.9.0
+### Back online
+- I am hosting the bot again :)
+### Glitched biome fixed
+- Glitched biome now gives glitched-exclusive auras and native rarities like it was supposed to
+### Added halloween biomes to glitched biome
+- You can get auras from the halloween biomes in glitched biome!!!
+### Embed tweak
+- Changed the biomelogs embeds to look even cleaner
+### Renamed items
+- `BIG Heavenly Potion` → `Small Heavenly Potion`
+- `Gurt's Hatred` → `Heavenly Potion`
+
 ## Sol's RNG Bot v3.8.3
 ### Updated biome update embed
 - It looks cooler now

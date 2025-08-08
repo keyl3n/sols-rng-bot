@@ -4,7 +4,8 @@ const config = require('./config.json');
 let request = require('request');
 const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk')
+const chalk = require('chalk');
+const moment = require('moment');
 const rollDataPath = path.join(__dirname, './userdata/rollcounts.json');
 const userDataPath = path.join(__dirname, './userdata/userauras.json');
 const itemsPath = './userdata/useritems.json';
@@ -139,17 +140,17 @@ function saveBlacklist() {
 
 const validItems = [
   "Mini Heavenly Potion",
-  "BIG Heavenly Potion",
+  "Small Heavenly Potion",
   "DEV POTION OF DOOM",
-  "Gurt's Hatred",
+  "Heavenly Potion",
   "Coin"
   // Add more items here as needed
 ];
 
 const activeMiniHevUsers = new Set(); // stores user IDs temporarily
-const activeBigHevUsers = new Set(); // NEW: track BIG Heavenly Potion users
+const activeSmallHevUsers = new Set(); // NEW: track SMALL Heavenly Potion users
 const activeDevPotionOfDoomUsers = new Set();
-const activeGurtsHatredUsers = new Set();
+const activeHevUsers = new Set();
 
 // Load counts from file
 let auraCounts = {};
@@ -238,7 +239,7 @@ function sendBiomeLog(biome, guildId) {
 
   let description = `> # Biome Started - ${displayBiome}`;
   if (!isNormal && seconds !== null) {
-    description += `\n${seconds} seconds remain`;
+    description += `\nEnds <t:${Math.floor(endsAt / 1000)}:R>`;
   }
 
   const payload = {
@@ -331,15 +332,15 @@ function recordRoll(userId) {
   }
 
   if (totalRolls % 100000 === 0) {
-    giveItem(userId, "Gurt's Hatred", 1);
+    giveItem(userId, "Heavenly Potion", 1);
     gotPotion = true;
-    console.log(`🎉 Gave ${userId} a [ GURT'S HATRED ] for reaching a roll milestone!`)
+    console.log(`🎉 Gave ${userId} a Heavenly Potion for reaching a roll milestone!`)
   }
 
   if (totalRolls % 17500 === 0) {
-    giveItem(userId, "BIG Heavenly Potion", 1);
+    giveItem(userId, "Small Heavenly Potion", 1);
     gotPotion = true;
-    console.log(`🎉 Gave ${userId} a BIG Heavenly Potion for reaching a roll milestone!`)
+    console.log(`🎉 Gave ${userId} a Small Heavenly Potion for reaching a roll milestone!`)
   }
 
   saveAuraCounts();
@@ -361,6 +362,7 @@ function recordAuraRoll(userId, auraCategory) {
 }
 
 function getTimestamp() {
+  /*
   const now = new Date();
 
   const hours = String(now.getHours()).padStart(2, '0');
@@ -368,6 +370,8 @@ function getTimestamp() {
   const seconds = String(now.getSeconds()).padStart(2, '0');
 
   return `[${hours}:${minutes}:${seconds}]`;
+  */
+  return `[ <t:${Math.floor(Date.now() / 1000)}> ]`;
 }
 
 const commands = [
@@ -596,14 +600,14 @@ function buildAuraPool(biomeName, isDaytime) {
 async function roll(interaction, isButton = false, couldntDisable) {
   // let rollPool = buildAuraPool(currentBiome.name, currentBiome.isDaytime);
   const usingMiniPotion = activeMiniHevUsers.has(interaction.user.id);
-  const usingBigPotion = activeBigHevUsers.has(interaction.user.id);
+  const usingSmallPotion = activeSmallHevUsers.has(interaction.user.id);
   const usingDevPotionOfDoom = activeDevPotionOfDoomUsers.has(interaction.user.id);
-  const usingGurtsHatred = activeGurtsHatredUsers.has(interaction.user.id);
+  const usingHevPotion = activeHevUsers.has(interaction.user.id);
 
   let auraPool;
 
   if (currentBiome.name === 'Dreamspace') {
-    if (usingBigPotion) {
+    if (usingSmallPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...dreamspaceAuras.map(a => ({
@@ -611,7 +615,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 99000);
-      activeBigHevUsers.delete(interaction.user.id); // consume
+      activeSmallHevUsers.delete(interaction.user.id); // consume
     } else if (usingMiniPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -621,7 +625,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         }))
       ].filter(a => 1 / a.weight >= 9999);
       activeMiniHevUsers.delete(interaction.user.id); // consume
-    } else if (usingGurtsHatred) {
+    } else if (usingHevPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...dreamspaceAuras.map(a => ({
@@ -629,7 +633,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 999990);
-      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+      activeHevUsers.delete(interaction.user.id); // consume
     } else if (usingDevPotionOfDoom) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -649,14 +653,13 @@ async function roll(interaction, isButton = false, couldntDisable) {
       ]
     }
   } else if (currentBiome.name === 'Glitched') {
-    // Use native biome rarities instead of normal
-    if (usingBigPotion) {
+    if (usingSmallPotion) {
       auraPool = [
-        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
+            const biomeChanceIn = a.biomeRarity[a.originalBiome]
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
@@ -665,83 +668,144 @@ async function roll(interaction, isButton = false, couldntDisable) {
         ...glitchedAuras.map(a => ({
           name: a.name,
           weight: 1 / a.chanceIn
+        })),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 99000);
-      activeBigHevUsers.delete(interaction.user.id); // consume
+      activeSmallHevUsers.delete(interaction.user.id); // consume
     } else if (usingMiniPotion) {
       auraPool = [
-        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
+            const biomeChanceIn = a.biomeRarity[a.originalBiome]
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
             };
           }),
         ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...graveyardAuras.map(a => ({
           name: a.name,
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 9999);
       activeMiniHevUsers.delete(interaction.user.id); // consume
-    } else if (usingDevPotionOfDoom) {
+    } else if (usingHevPotion) {
       auraPool = [
-        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
+            const biomeChanceIn = a.biomeRarity[a.originalBiome]
             return {
               name: a.name,
               weight: 1 / biomeChanceIn
             };
           }),
         ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...graveyardAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        }))
+      ].filter(a => 1 / a.weight >= 999999);
+      activeHevUsers.delete(interaction.user.id); // consume
+    } else if (usingDevPotionOfDoom) {
+      auraPool = [
+        buildAuraPool(currentBiome.name, currentBiome.isDaytime),
+        ...biomeAuras
+          .filter(a => a.biomeRarity)
+          .map(a => {
+            const biomeChanceIn = a.biomeRarity[a.originalBiome]
+            return {
+              name: a.name,
+              weight: 1 / biomeChanceIn
+            };
+          }),
+        ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...graveyardAuras.map(a => ({
           name: a.name,
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 99999998);
       activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
-    } else if (usingGurtsHatred) {
-      auraPool = [
-        ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
-        ...biomeAuras
-          .filter(a => a.biomeRarity)
-          .map(a => {
-            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
-            return {
-              name: a.name,
-              weight: 1 / biomeChanceIn
-            };
-          }),
-        ...glitchedAuras.map(a => ({
-          name: a.name,
-          weight: 1 / a.chanceIn
-        }))
-      ].filter(a => 1 / a.weight >= 999990);
-      activeGurtsHatredUsers.delete(interaction.user.id); // consume
     } else {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...biomeAuras
           .filter(a => a.biomeRarity)
           .map(a => {
-            const biomeChanceIn = Math.min(...Object.values(a.biomeRarity));
+            const biomeChanceIn = a.biomeRarity
+            console.log(biomeChanceIn)
             return {
               name: a.name,
-              weight: 1 / biomeChanceIn
+              weight: 1 / a.biomeRarity[a.originalBiome]
             };
           }),
+        ...dreamspaceAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
         ...glitchedAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...pumpkinMoonAuras.map(a => ({
+          name: a.name,
+          weight: 1 / a.chanceIn
+        })),
+        ...graveyardAuras.map(a => ({
           name: a.name,
           weight: 1 / a.chanceIn
         }))
       ]
     }
   } else if (currentBiome.name === 'Pumpkin Moon') {
-    if (usingBigPotion) {
+    if (usingSmallPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...pumpkinMoonAuras.map(a => ({
@@ -749,7 +813,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 99000);
-      activeBigHevUsers.delete(interaction.user.id); // consume
+      activeSmallHevUsers.delete(interaction.user.id); // consume
     } else if (usingMiniPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -768,7 +832,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         }))
       ].filter(a => 1 / a.weight >= 99999998);
       activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
-    } else if (usingGurtsHatred) {
+    } else if (usingHevPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...pumpkinMoonAuras.map(a => ({
@@ -776,7 +840,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 999990);
-      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+      activeHevUsers.delete(interaction.user.id); // consume
     } else {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -787,7 +851,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
       ]
     }
   } else if (currentBiome.name === 'Graveyard') {
-    if (usingBigPotion) {
+    if (usingSmallPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...graveyardAuras.map(a => ({
@@ -795,7 +859,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 99000);
-      activeBigHevUsers.delete(interaction.user.id); // consume
+      activeSmallHevUsers.delete(interaction.user.id); // consume
     } else if (usingMiniPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -814,7 +878,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         }))
       ].filter(a => 1 / a.weight >= 99999998);
       activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
-    } else if (usingGurtsHatred) {
+    } else if (usingHevPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...graveyardAuras.map(a => ({
@@ -822,7 +886,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 999990);
-      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+      activeHevUsers.delete(interaction.user.id); // consume
     } else {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -833,7 +897,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
       ]
     }
   } else if (currentBiome.name === 'Scoobert') {
-    if (usingBigPotion) {
+    if (usingSmallPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...scoobertAuras.map(a => ({
@@ -841,7 +905,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 99000);
-      activeBigHevUsers.delete(interaction.user.id); // consume
+      activeSmallHevUsers.delete(interaction.user.id); // consume
     } else if (usingMiniPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -851,7 +915,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
         }))
       ].filter(a => 1 / a.weight >= 9999);
       activeMiniHevUsers.delete(interaction.user.id); // consume
-    } else if (usingGurtsHatred) {
+    } else if (usingHevPotion) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
         ...scoobertAuras.map(a => ({
@@ -859,7 +923,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
           weight: 1 / a.chanceIn
         }))
       ].filter(a => 1 / a.weight >= 999990);
-      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+      activeHevUsers.delete(interaction.user.id); // consume
     } else if (usingDevPotionOfDoom) {
       auraPool = [
         ...buildAuraPool(currentBiome.name, currentBiome.isDaytime),
@@ -879,18 +943,18 @@ async function roll(interaction, isButton = false, couldntDisable) {
       ]
     }
   } else {
-    if (usingBigPotion) {
+    if (usingSmallPotion) {
       auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 99990);
-      activeBigHevUsers.delete(interaction.user.id); // consume
+      activeSmallHevUsers.delete(interaction.user.id); // consume
     } else if (usingMiniPotion) {
       auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 9999);
       activeMiniHevUsers.delete(interaction.user.id); // consume
     } else if (usingDevPotionOfDoom) {
       auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 99999998);
       activeDevPotionOfDoomUsers.delete(interaction.user.id); // consume
-    } else if (usingGurtsHatred) {
+    } else if (usingHevPotion) {
       auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)].filter(a => 1 / a.weight >= 999990);
-      activeGurtsHatredUsers.delete(interaction.user.id); // consume
+      activeHevUsers.delete(interaction.user.id); // consume
     } else {
       auraPool = [...buildAuraPool(currentBiome.name, currentBiome.isDaytime)]
     }
@@ -932,7 +996,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
     color = 0x1e0bf1; // Royal Blue (10M+)
   } else if (chanceIn >= 1_000_000) {
     color = 0xf059d1; // Pink (1M+)
-  } else if (chanceIn >= 100_000) {
+  } else if (chanceIn >= 99_999) {
     color = 0x39ffe8; // Cyan
   } else if (chanceIn >= 10_000) {
     color = 0xff8000; // Orange
@@ -941,8 +1005,6 @@ async function roll(interaction, isButton = false, couldntDisable) {
   } else {
     color = null;
   }
-
-
 
   const { gotPotion, totalRolls } = recordRoll(interaction.user.id);
   let footerText = `Roll #${totalRolls.toLocaleString()} | +${coinsEarned.toLocaleString()} Coins`;
@@ -1123,7 +1185,7 @@ client.on('ready', async () => {
         } else {
           // At start of night, try to activate a night-only event biome
           const canOverride = !currentBiome.disallowEventBiomeOverride;
-          if (canOverride && Math.floor(Math.random() * 25 /* <-- 1 in 25 */ ) === 0) {
+          if (canOverride && Math.floor(Math.random() * 25 /* <-- 1 in 25 */) === 0) {
             const nightBiomes = ['Pumpkin Moon', 'Graveyard'];
             const pick = nightBiomes[Math.floor(Math.random() * nightBiomes.length)];
             const nightBiome = biomes.find(b => b.name === pick);
@@ -1178,7 +1240,7 @@ client.on('interactionCreate', async interaction => {
     }
     else {
       if (interaction.user.id != config.adminId) {
-        console.log('Cannot roll! Roll service unavailable')
+        console.log(`${chalk.bgRedBright.white('ERROR')} Cannot roll! Roll service unavailable`)
         const replyEmbed = new EmbedBuilder()
           .setColor(0xe65a5a)
           .setTitle('Unavailable')
@@ -1444,8 +1506,8 @@ client.on('interactionCreate', async interaction => {
     // calculate up‑to‑date rolls‑until for each tier
     const tiers = [
       { interval: 1750, name: 'Mini Heavenly Potion' },
-      { interval: 17500, name: 'BIG Heavenly Potion' },
-      { interval: 100000, name: "Gurt's Hatred" },
+      { interval: 17500, name: 'Small Heavenly Potion' },
+      { interval: 100000, name: "Heavenly Potion" },
     ];
 
     // build a response embed
@@ -1582,7 +1644,7 @@ client.on('interactionCreate', async interaction => {
         color = 0x1e0bf1; // Royal Blue (10M+)
       } else if (chanceIn >= 1_000_000) {
         color = 0xf059d1; // Pink (1M+)
-      } else if (chanceIn >= 100_000) {
+      } else if (chanceIn >= 99_999) {
         color = 0x39ffe8; // Cyan
       } else if (chanceIn >= 10_000) {
         color = 0xff8000; // Orange
@@ -1771,7 +1833,7 @@ client.on('interactionCreate', async interaction => {
       for (const guild of client.guilds.cache.values()) {
         startForcedBiome(biome, guild.id);
       }
-      console.log(`🌍 Biome switched to ${biome.name}`);
+      console.log(`🌍 Biome switched to ${biome.name} (forced)`);
       await updateBotStatus(); // Force update status now
 
       const embed = new EmbedBuilder()
@@ -2075,10 +2137,10 @@ client.on('interactionCreate', async interaction => {
       return interaction.reply({ embeds: [alreadyActiveEmbed] });
     }
 
-    if (item === 'BIG Heavenly Potion' && activeBigHevUsers.has(userId)) {
+    if (item === 'Small Heavenly Potion' && activeSmallHevUsers.has(userId)) {
       const alreadyActiveEmbed = new EmbedBuilder()
-        .setTitle('⚠️ BIG Potion Already Active')
-        .setDescription('You already have a **BIG Heavenly Potion** active!\nUse it in a roll before using another.')
+        .setTitle('⚠️ Small Potion Already Active')
+        .setDescription('You already have a **Small Heavenly Potion** active!\nUse it in a roll before using another.')
         .setColor(0xffcc00);
 
       return interaction.reply({ embeds: [alreadyActiveEmbed] });
@@ -2093,10 +2155,10 @@ client.on('interactionCreate', async interaction => {
       return interaction.reply({ embeds: [alreadyActiveEmbed] });
     }
 
-    if (item === "Gurt's Hatred" && activeDevPotionOfDoomUsers.has(userId)) {
+    if (item === "Heavenly Potion" && activeDevPotionOfDoomUsers.has(userId)) {
       const alreadyActiveEmbed = new EmbedBuilder()
-        .setTitle("⚠️ Gurt's Hatred Active")
-        .setDescription("You already have a **Gurt's Hatred** active!\nUse it in a roll before using another.")
+        .setTitle("⚠️ Heavenly Potion Active")
+        .setDescription("You already have a **Heavenly Potion** active!\nUse it in a roll before using another.")
         .setColor(0xffcc00);
 
       return interaction.reply({ embeds: [alreadyActiveEmbed] });
@@ -2112,16 +2174,16 @@ client.on('interactionCreate', async interaction => {
       activeMiniHevUsers.add(userId);
     }
 
-    if (item === 'BIG Heavenly Potion') {
-      activeBigHevUsers.add(userId);
+    if (item === 'Small Heavenly Potion') {
+      activeSmallHevUsers.add(userId);
     }
 
     if (item === 'DEV POTION OF DOOM') {
       activeDevPotionOfDoomUsers.add(userId);
     }
 
-    if (item === "Gurt's Hatred") {
-      activeGurtsHatredUsers.add(userId);
+    if (item === "Heavenly Potion") {
+      activeHevUsers.add(userId);
     }
 
     console.log(`✨ ${interaction.user.username} used a ${item}`)
@@ -2474,19 +2536,53 @@ client.on(Events.InteractionCreate, async interaction => {
         console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Roll Again button error:`)}`, err);
       }
     } else {
-      console.log(`${chalk.bgRedBright.white('ERROR')} Cannot roll! Roll service unavailable`)
-      const replyEmbed = new EmbedBuilder()
-        .setColor(0xe65a5a)
-        .setTitle('Unavailable')
-        .setDescription('# The bot is currently being tested, updated, or is not available at this point.')
-        .setFooter({ text: 'Please try again later.', iconURL: null });
-      try {
-        await interaction.reply({ embeds: [replyEmbed] });
-      } catch (err) {
-        if (err.code === 10062) {
-          console.warn("⚠️ Interaction expired before reply could be sent.");
-        } else {
-          console.error("❌ Failed to reply to interaction:", err);
+      if (interaction.user.id != config.adminId) {
+        console.log(`${chalk.bgRedBright.white('ERROR')} Cannot roll! Roll service unavailable`)
+        const replyEmbed = new EmbedBuilder()
+          .setColor(0xe65a5a)
+          .setTitle('Unavailable')
+          .setDescription('# The bot is currently being tested, updated, or is not available at this point.')
+          .setFooter({ text: 'Please try again later.', iconURL: null });
+        try {
+          await interaction.reply({ embeds: [replyEmbed] });
+        } catch (err) {
+          if (err.code === 10062) {
+            console.warn("⚠️ Interaction expired before reply could be sent.");
+          } else {
+            console.error("❌ Failed to reply to interaction:", err);
+          }
+        }
+      } else {
+        try {
+          await interaction.deferUpdate(); // acknowledge the click
+
+          // Disable the button on the original message
+          const disabledButton = new ButtonBuilder()
+            .setCustomId('again')
+            .setLabel('Roll Again')
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(true);
+
+          const row = new ActionRowBuilder().addComponents(disabledButton);
+
+          let disabled = false;
+          try {
+            if (interaction.message?.editable) {
+              await interaction.message.edit({ components: [row] });
+              disabled = true;
+            }
+          } catch (err) {
+            if (err.code === 10008) {
+              //console.warn("⚠️ Could not disable button (message deleted or ephemeral).");
+            } else {
+              console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Failed to disable Roll Again button:`)}`, err);
+            }
+          }
+
+          // Always roll regardless of whether disabling succeeded
+          await roll(interaction, true, !disabled); // third arg: force ephemeral if disable failed
+        } catch (err) {
+          console.error(`${chalk.bgRedBright.white('ERROR')}${chalk.red(` Roll Again button error:`)}`, err);
         }
       }
     }

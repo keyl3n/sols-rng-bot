@@ -2,6 +2,8 @@ node_modules/
 backups/
 .vs/
 .vscode/
+old/
+old/*
 userdata/*
 !.gitkeep
 oldAurasCollection.txt

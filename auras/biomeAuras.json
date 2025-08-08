@@ -4,307 +4,351 @@
     "chanceIn": 900,
     "biomeRarity": {
       "Windy": 300
-    }
+    },
+    "originalBiome": "Windy"
   },
   {
     "name": "Stormal",
     "chanceIn": 90000,
     "biomeRarity": {
       "Windy": 30000
-    }
+    },
+    "originalBiome": "Windy"
   },
   {
     "name": "Stormal : Hurricane",
     "chanceIn": 13500000,
     "biomeRarity": {
       "Windy": 4500000
-    }
+    },
+    "originalBiome": "Windy"
   },
   {
     "name": "AVIATOR",
     "chanceIn": 24000000,
     "biomeRarity": {
       "Windy": 8000000
-    }
+    },
+    "originalBiome": "Windy"
   },
   {
     "name": "Glacier",
     "chanceIn": 2304,
     "biomeRarity": {
       "Snowy": 768
-    }
+    },
+    "originalBiome": "Snowy"
   },
   {
     "name": "Permafrost",
     "chanceIn": 73500,
     "biomeRarity": {
       "Snowy": 24500
-    }
+    },
+    "originalBiome": "Snowy"
   },
   {
     "name": "Blizzard",
     "chanceIn": 27315000,
     "biomeRarity": {
       "Snowy": 9105000
-    }
+    },
+    "originalBiome": "Snowy"
   },
   {
     "name": "Poseidon",
     "chanceIn": 4000000,
     "biomeRarity": {
       "Rainy": 1000000
-    }
+    },
+    "originalBiome": "Rainy"
   },
   {
     "name": "Sailor",
     "chanceIn": 12000000,
     "biomeRarity": {
       "Rainy": 3000000
-    }
+    },
+    "originalBiome": "Rainy"
   },
   {
     "name": "Sailor : Flying Dutchman",
     "chanceIn": 80000000,
     "biomeRarity": {
       "Rainy": 20000000
-    }
+    },
+    "originalBiome": "Rainy"
   },
   {
     "name": "Abyssal Hunter",
     "chanceIn": 400000000,
     "biomeRarity": {
       "Rainy": 100000000
-    }
+    },
+    "originalBiome": "Rainy"
   },
   {
     "name": "Gilded",
     "chanceIn": 512,
     "biomeRarity": {
       "Sand Storm": 128
-    }
+    },
+    "originalBiome": "Sand Storm"
   },
   {
     "name": "Jackpot",
     "chanceIn": 777,
     "biomeRarity": {
       "Sand Storm": 194
-    }
+    },
+    "originalBiome": "Sand Storm"
   },
   {
     "name": "Anubis",
     "chanceIn": 7200000,
     "biomeRarity": {
       "Sand Storm": 1800000
-    }
+    },
+    "originalBiome": "Sand Storm"
   },
   {
     "name": "Atlas",
     "chanceIn": 360000000,
     "biomeRarity": {
       "Sand Storm": 90000000
-    }
+    },
+    "originalBiome": "Sand Storm"
   },
   {
     "name": "Undead",
     "chanceIn": 12000,
     "biomeRarity": {
       "Hell": 2000
-    }
+    },
+    "originalBiome": "Hell"
   },
   {
     "name": "Undead : Devil",
     "chanceIn": 120000,
     "biomeRarity": {
       "Hell": 20000
-    }
+    },
+    "originalBiome": "Hell"
   },
   {
     "name": "Hades",
     "chanceIn": 6666666,
     "biomeRarity": {
       "Hell": 1111111
-    }
+    },
+    "originalBiome": "Hell"
   },
   {
     "name": "BLOODLUST",
     "chanceIn": 300000000,
     "biomeRarity": {
       "Hell": 50000000
-    }
+    },
+    "originalBiome": "Hell"
   },
   {
     "name": "Starlight",
     "chanceIn": 50000,
     "biomeRarity": {
       "Starfall": 10000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Star Rider",
     "chanceIn": 50000,
     "biomeRarity": {
       "Starfall": 10000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Comet",
-    "chanceIn": 1200000,
+    "chanceIn": 120000,
     "biomeRarity": {
       "Starfall": 24000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Astral",
     "chanceIn": 1336200,
     "biomeRarity": {
       "Starfall": 267000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Parasite",
     "chanceIn": 3000000,
     "biomeRarity": {
       "Corruption": 600000
-    }
+    },
+    "originalBiome": "Corruption"
   },
   {
     "name": "Galaxy",
     "chanceIn": 5000000,
     "biomeRarity": {
       "Starfall": 1000000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Stargazer",
     "chanceIn": 9200000,
     "biomeRarity": {
       "Starfall": 1840000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Starscourge",
     "chanceIn": 10000000,
     "biomeRarity": {
       "Starfall": 2000000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Sirius",
     "chanceIn": 14000000,
     "biomeRarity": {
       "Starfall": 2800000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Starscourge : Radiant",
     "chanceIn": 100000000,
     "biomeRarity": {
       "Starfall": 20000000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Astral : Legendarium",
     "chanceIn": 267200000,
     "biomeRarity": {
       "Starfall": 53400000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "GARGANTUA",
     "chanceIn": 430000000,
     "biomeRarity": {
       "Starfall": 86000000
-    }
+    },
+    "originalBiome": "Starfall"
   },
   {
     "name": "Hazard",
     "chanceIn": 7000,
     "biomeRarity": {
       "Corruption": 1400
-    }
+    },
+    "originalBiome": "Corruption"
   },
   {
     "name": "Corrosive",
     "chanceIn": 12000,
     "biomeRarity": {
       "Corruption": 2400
-    }
+    },
+    "originalBiome": "Corruption"
   },
   {
     "name": "Hazard : Rays",
     "chanceIn": 70000,
     "biomeRarity": {
       "Corruption": 14000
-    }
+    },
+    "originalBiome": "Corruption"
   },
   {
     "name": "Impeached",
     "chanceIn": 200000000,
     "biomeRarity": {
       "Corruption": 40000000
-    }
+    },
+    "originalBiome": "Corruption"
   },
   {
     "name": "Undefined",
     "chanceIn": 1111111,
     "biomeRarity": {
       "Null": 1111
-    }
+    },
+    "originalBiome": "Null"
   },
   {
     "name": "Nihility",
     "chanceIn": 9000000,
     "biomeRarity": {
       "Null": 9000
-    }
+    },
+    "originalBiome": "Null"
   },
   {
     "name": "Solar",
     "chanceIn": 50000,
     "biomeRarity": {
       "Daytime": 5000
-    }
+    },
+    "originalBiome": "Daytime"
   },
   {
     "name": "Solar : Solstice",
     "chanceIn": 5000000,
     "biomeRarity": {
       "Daytime": 500000
-    }
+    },
+    "originalBiome": "Daytime"
   },
   {
     "name": "Lunar",
     "chanceIn": 50000,
     "biomeRarity": {
       "Nighttime": 5000
-    }
+    },
+    "originalBiome": "Nighttime"
   },
   {
     "name": "Lunar : Full Moon",
     "chanceIn": 5000000,
     "biomeRarity": {
       "Nighttime": 500000
-    }
+    },
+    "originalBiome": "Nighttime"
   },
   {
     "name": "Twilight",
     "chanceIn": 6000000,
     "biomeRarity": {
       "Nighttime": 600000
-    }
+    },
+    "originalBiome": "Nighttime"
   },
   {
     "name": "Lullaby",
     "chanceIn": 17000000,
     "biomeRarity": {
       "Nighttime": 1700000
-    }
+    },
+    "originalBiome": "Nighttime"
   },
   {
     "name": "Twilight : Iridescent Memory",
     "chanceIn": 60000000,
     "biomeRarity": {
       "Nighttime": 6000000
-    }
+    },
+    "originalBiome": "Nighttime"
   }
 ]
