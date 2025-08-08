@@ -990,7 +990,7 @@ async function roll(interaction, isButton = false, couldntDisable) {
   let color;
   if (chanceIn >= 1_000_000_000) {
     color = 0x83ddf1; // Light Blue (1B+)
-  } else if (chanceIn >= 100_000_000) {
+  } else if (chanceIn >= 99_999_998) {
     color = 0xbb2022; // Deep Red (100M+)
   } else if (chanceIn >= 10_000_000) {
     color = 0x1e0bf1; // Royal Blue (10M+)
@@ -1638,7 +1638,7 @@ client.on('interactionCreate', async interaction => {
       let color;
       if (chanceIn >= 1_000_000_000) {
         color = 0x83ddf1; // Light Blue (1B+)
-      } else if (chanceIn >= 100_000_000) {
+      } else if (chanceIn >= 99_999_998) {
         color = 0xbb2022; // Deep Red (100M+)
       } else if (chanceIn >= 10_000_000) {
         color = 0x1e0bf1; // Royal Blue (10M+)
@@ -2236,7 +2236,7 @@ client.on('interactionCreate', async interaction => {
     let color;
     if (chanceIn >= 1_000_000_000) {
       color = 0x83ddf1; // Light Blue (1B+)
-    } else if (chanceIn >= 100_000_000) {
+    } else if (chanceIn >= 99_999_998) {
       color = 0xbb2022; // Deep Red (100M+)
     } else if (chanceIn >= 10_000_000) {
       color = 0x1e0bf1; // Royal Blue (10M+)
