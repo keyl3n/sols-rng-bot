@@ -2230,8 +2230,13 @@ client.on('interactionCreate', async interaction => {
     const chanceIn = aura.chanceIn || Math.round(1 / aura.weight);
     const description = auraDescriptions[auraName] || '_No description available._';
 
-    // Count how many users have this aura
-    const ownerCount = Object.values(userData).filter(user => user[auraName]).length;
+    // Count how many non-blacklisted users have this aura
+    let ownerCount = Object.entries(userData)
+      .filter(([userId, user]) => {
+        // Has aura AND is not blacklisted
+        return user[auraName] && !leaderboardBlacklist.includes(userId);
+      })
+      .length;
 
     let color;
     if (chanceIn >= 1_000_000_000) {

@@ -1,3 +1,7 @@
+## Sol's RNG Bot v3.9.1
+### Tweak to `/auracounts`
+- The "Owner count" field for `/auracounts` no longer counts blacklisted users as owners
+
 # Sol's RNG Bot v3.9.0
 ## Back online
 - I am hosting the bot again :)
