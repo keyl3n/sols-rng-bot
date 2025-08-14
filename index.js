@@ -1,23 +1,27 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, PresenceUpdateStatus, ButtonBuilder, ButtonStyle, ActionRowBuilder, Events, ActivityType } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, PresenceUpdateStatus, ButtonBuilder, ButtonStyle, ActionRowBuilder, Events, ActivityType, AttachmentBuilder } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const config = require('./config.json');
 let request = require('request');
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
-const moment = require('moment');
 const rollDataPath = path.join(__dirname, './userdata/rollcounts.json');
 const userDataPath = path.join(__dirname, './userdata/userauras.json');
 const itemsPath = './userdata/useritems.json';
 const blacklistPath = './lbBlacklist.json';
 const auraDescriptionsPath = path.join(__dirname, 'auradescriptions.json');
 const aurasPath = './auras/auras.json';
+const logFilePath = path.join(__dirname, 'rolllogs.txt');
 const baseAuras = JSON.parse(fs.readFileSync('./auras/auras.json'));
 const biomeAuras = JSON.parse(fs.readFileSync('./auras/biomeAuras.json'));
 const allAuras = [...baseAuras, ...biomeAuras];
 let biomeAurasByName = {};
 const biomelogsPath = './biomelogs.json';
 let biomelogWebhooks = fs.existsSync(biomelogsPath) ? JSON.parse(fs.readFileSync(biomelogsPath)) : {};
+const rollingBlacklistPath = './rollingBlacklist.json';
+const rollingBlacklist = require(rollingBlacklistPath);
+
+console.log(`${chalk.bgGreenBright.black('OK')} Loaded rolling blacklist:`, JSON.parse(fs.readFileSync(rollingBlacklistPath)))
 
 // items that are valid but cannot simply be used as if they were a potion or rune
 const unusableItems = ["Coin"]
@@ -119,7 +123,7 @@ function reloadAuraPool() {
       biomeAurasByName[aura.name.toLowerCase()] = aura;
     }
 
-    console.log('🔄 Aura pool reloaded.');
+    console.log(`${chalk.bgGreenBright.black('OK')} Aura pool reloaded.`);
   } catch (err) {
     console.error('❌ Failed to reload aura pool:', err);
   }
@@ -130,7 +134,7 @@ reloadAuraPool();
 let leaderboardBlacklist = [];
 if (fs.existsSync(blacklistPath)) {
   const raw = JSON.parse(fs.readFileSync(blacklistPath));
-  console.log('🔍 Loaded blacklist raw:', raw);
+  console.log(`${chalk.bgGreenBright.black('OK')} Loaded leaderboard blacklist:`, raw);
   leaderboardBlacklist = Array.isArray(raw) ? raw : [];
 }
 
@@ -372,6 +376,17 @@ function getTimestamp() {
   return `[${hours}:${minutes}:${seconds}]`;
   */
   return `[ <t:${Math.floor(Date.now() / 1000)}> ]`;
+}
+
+function logRoll(user, auraName, chanceIn) {
+  const timestamp = Math.floor(Date.now() / 1000); // UNIX timestamp in seconds
+  const line = `[${timestamp}] @${user.username} (${user.id}) rolled ${auraName}, chance of 1 in ${chanceIn}\n`;
+
+  try {
+      fs.appendFileSync(logFilePath, line, 'utf8');
+  } catch (err) {
+      console.error('Error writing to rolllogs.txt:', err);
+  }
 }
 
 const commands = [
@@ -780,7 +795,6 @@ async function roll(interaction, isButton = false, couldntDisable) {
           .filter(a => a.biomeRarity)
           .map(a => {
             const biomeChanceIn = a.biomeRarity
-            console.log(biomeChanceIn)
             return {
               name: a.name,
               weight: 1 / a.biomeRarity[a.originalBiome]
@@ -1073,6 +1087,10 @@ async function roll(interaction, isButton = false, couldntDisable) {
     );
   }
 
+  if (config.logRollsToFile) {
+    logRoll(interaction.user, the_aura.name, Math.floor(1 / the_aura.weight));
+  }
+
   recordAuraRoll(interaction.user.id, the_aura.name);
 }
 
@@ -1236,7 +1254,14 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'roll') {
     if (config.rollingAllowed) {
-      await roll(interaction)
+      if (rollingBlacklist.includes(userId)) {
+        const embed = new EmbedBuilder()
+          .setDescription(`# Error!\nAn error occurred when trying to roll.\nThe details are as follows:\n\`\`\`\nFailed to roll: ReferenceError: No such variable 'user'\n\`\`\``)
+          .setColor(0xf25050)
+        console.log(`${username} (${userId}) can't roll, they're blacklisted!!!`)
+        return await interaction.reply({ embeds: [embed] });
+      }
+      await roll(interaction);
     }
     else {
       if (interaction.user.id != config.adminId) {
@@ -1266,26 +1291,26 @@ client.on('interactionCreate', async interaction => {
   if (interaction.commandName === 'oatmeal') {
     try {
       await interaction.deferReply();
-      const possibleScoobs = [
-        'https://media.discordapp.net/attachments/930932805435797515/1399956841651372042/IMG_2850.jpg?ex=688ae2e8&is=68899168&hm=1368f7eb8d2bdade75963640a8c5753898d64f4f005661117cc96301cc1d53f9&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956842519466004/IMG_2807.jpg?ex=688ae2e9&is=68899169&hm=375e764def08bf9bcdd38ccb2019eccc0efa93e3841e899b383ccfc1c8224581&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956843064987648/IMG_2679.jpg?ex=688ae2e9&is=68899169&hm=915073f7d1e35eaf35e1ce2e7074079ddf9f5e7b9c6e21ed945dc5c3a8830911&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956843564105738/IMG_2616.jpg?ex=688ae2e9&is=68899169&hm=2ded7c0b8f0ce45007abc90abf262e104e3cebbd68110ff87b27a540805e134d&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956844109369487/IMG_2608.jpg?ex=688ae2e9&is=68899169&hm=afb1944c203079a7c8230d80eb4f508e1f07c6ae27f0e25ce13d39b95acfa47d&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956844604162058/IMG_2543.jpg?ex=688ae2e9&is=68899169&hm=dac2edc734ae1d7cecb2d4a8c2885f9d68251dc419bd4ff256b19b45c5d492ff&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956845073928383/IMG_2447.jpg?ex=688ae2e9&is=68899169&hm=d75b0df45e0700229593cc48b9c0b87d7e8e94219a80b0e388f56c742de643e9&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956845577240707/IMG_2443.jpg?ex=688ae2e9&is=68899169&hm=89a7bd01c37768229b1ffc1b716373569aa98124d8746d0c1b0a735ae146efe1&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956846156058654/IMG_2376.jpg?ex=688ae2ea&is=6889916a&hm=e7370a7ea6a7d413b964e968776de4f3e0a06953a5891c1a4182e50b1fbf6352&=&width=642&height=856',
-        'https://media.discordapp.net/attachments/930932805435797515/1399956846634340472/IMG_2334.jpg?ex=688ae2ea&is=6889916a&hm=fb1775e1afe8c9e44b8c015ac0ebc6c7c9f22d19fd4cc2d95b7bb36b74558a6c&=&width=642&height=856'
+      const possibleCheenses = [
+        './images/oatmeal/IMG_2334.JPG',
+        './images/oatmeal/IMG_2376.JPG',
+        './images/oatmeal/IMG_2443.JPG',
+        './images/oatmeal/IMG_2543.JPG',
+        './images/oatmeal/IMG_2608.webp',
+        './images/oatmeal/IMG_2616.webp',
+        './images/oatmeal/IMG_2679.webp',
+        './images/oatmeal/IMG_2807.webp',
+        './images/oatmeal/IMG_2850.webp'
       ]
-      const selectedScoob = Math.floor(Math.random() * possibleScoobs.length);
-      console.log('I just Oatmealed (' + selectedScoob + ')')
-      await interaction.editReply(possibleScoobs[selectedScoob])
+      const selectedCheens = Math.floor(Math.random() * possibleCheenses.length);
+      const sendThisCheens = new AttachmentBuilder(possibleCheenses[selectedCheens]);
+      console.log('I just Oatmealed (' + selectedCheens + ')')
+      await interaction.editReply({ files: [sendThisCheens] })
     } catch (err) {
       if (err.code === 10062) {
         console.warn("⚠️ Interaction expired before reply could be sent.");
       } else {
-        console.error("❌ Failed to reply to interaction:", err);
+        console.error("❌ Couldn't cheens ts... Here's why:", err);
       }
     }
   }
@@ -2509,6 +2534,13 @@ client.on(Events.InteractionCreate, async interaction => {
 
   if (interaction.customId === 'again') {
     if (config.rollingAllowed) {
+      if (rollingBlacklist.includes(interaction.user.id)) {
+        const embed = new EmbedBuilder()
+          .setDescription(`# Error!\nAn error occurred when trying to roll.\nThe details are as follows:\n\`\`\`\nFailed to roll: ReferenceError: No such variable 'user'\n\`\`\``)
+          .setColor(0xf25050)
+        console.log(`${interaction.user.username} (${interaction.user.id}) can't roll, they're blacklisted!!!`)
+        return await interaction.reply({ embeds: [embed], ephemeral: true });
+      }
       try {
         await interaction.deferUpdate(); // acknowledge the click
 

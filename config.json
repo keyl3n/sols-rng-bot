@@ -4,5 +4,6 @@
     "adminId": "",
     "rollingAllowed": true,
     "identifyConsoleLoggedRolls": false,
-    "rollLogWebhookUrl": null
+    "rollLogWebhookUrl": null,
+    "logRollsToFile": false
 }

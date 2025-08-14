@@ -1,3 +1,12 @@
+# Sol's RNG Bot v3.10.0
+I did lots of random stuff so I'm not gonna categorize it
+- Made `/oatmeal` use attachments
+- Added a rolling blacklist system that shows a user a fake error message
+- Added a system that can log rolled auras to a file
+- New Scoobert aura! Scooberton, 1 in 4,096
+- Added the gemstone auras from the game that were never added until now for some reason
+- New secret 1 in 10,000,000,000 aura! Infinity, 1 in I already said it I'm not typing it twice
+
 ## Sol's RNG Bot v3.9.1
 ### Tweak to `/auracounts`
 - The "Owner count" field for `/auracounts` no longer counts blacklisted users as owners

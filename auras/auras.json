@@ -36,6 +36,14 @@
     "chanceIn": 128
   },
   {
+    "name": "Topaz",
+    "chanceIn": 150
+  },
+  {
+    "name": "Ruby",
+    "chanceIn": 350
+  },
+  {
     "name": "Rage : Heated",
     "chanceIn": 12800
   },
@@ -44,8 +52,24 @@
     "chanceIn": 403
   },
   {
+    "name": "Emerald",
+    "chanceIn": 500
+  },
+  {
     "name": "Ink",
     "chanceIn": 700
+  },
+  {
+    "name": "Jackpot",
+    "chanceIn": 777
+  },
+  {
+    "name": "Sapphire",
+    "chanceIn": 800
+  },
+  {
+    "name": "Aquamarine",
+    "chanceIn": 900
   },
   {
     "name": "Ink : LEAK",
@@ -236,10 +260,6 @@
     "chanceIn": 49999500
   },
   {
-    "name": "Luminosity",
-    "chanceIn": 1200000000
-  },
-  {
     "name": "Arcane : Legacy",
     "chanceIn": 15000000
   },
@@ -344,7 +364,15 @@
     "chanceIn": 1073741824
   },
   {
+    "name": "Luminosity",
+    "chanceIn": 1200000000
+  },
+  {
     "name": "EQUINOX",
     "chanceIn": 2500000000
+  },
+  {
+    "name": "Infinity",
+    "chanceIn": 10000000000
   }
 ]

@@ -1,3 +1,4 @@
 [
-    { "name": "Scoob", "chanceIn": 12 }
+    { "name": "Scoob", "chanceIn": 12 },
+    { "name": "Scooberton", "chanceIn": 4096 }
   ]  

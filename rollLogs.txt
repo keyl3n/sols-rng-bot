@@ -1,0 +1,2 @@
+# rolled auras can be logged by the bot here
+# to enable, set logRollsToFile in config.json to true
